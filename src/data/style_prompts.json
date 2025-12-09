@@ -1,0 +1,189 @@
+{
+  "jamsheerjemshi_1765129752950.jpg": {
+    "id": "jamsheerjemshi_1765129752950",
+    "title": "Midnight Azure",
+    "viewpoint": "Isometric Projection",
+    "lighting_engine": "Octane Render",
+    "lighting_style": "Ambient Occlusion",
+    "materiality": "Glossy Reflections",
+    "hex_palette": [
+      "#2e2f33",
+      "#64707b",
+      "#adb9b8",
+      "#73889e",
+      "#949294"
+    ],
+    "filename": "jamsheerjemshi_1765129752950.jpg",
+    "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Ambient Occlusion, Glossy Reflections, color palette: #2e2f33, #64707b, #adb9b8, #73889e, #949294"
+  },
+  "jamsheerjemshi_1765129771120.jpg": {
+    "id": "jamsheerjemshi_1765129771120",
+    "title": "Ink Sketch",
+    "viewpoint": "Planometric View",
+    "lighting_engine": "Corona Render",
+    "lighting_style": "Ray-Traced Shadows",
+    "materiality": "Architectural Sketch",
+    "hex_palette": [
+      "#341414",
+      "#ede2e2",
+      "#764343",
+      "#938d89",
+      "#90848c"
+    ],
+    "filename": "jamsheerjemshi_1765129771120.jpg",
+    "generated_prompt": "Architectural floor plan, Planometric View, style of Corona Render, Ray-Traced Shadows, Architectural Sketch, color palette: #341414, #ede2e2, #764343, #938d89, #90848c"
+  },
+  "jamsheerjemshi_1765129779669.jpg": {
+    "id": "jamsheerjemshi_1765129779669",
+    "title": "Burgundy Draft",
+    "viewpoint": "Planometric View",
+    "lighting_engine": "Corona Render",
+    "lighting_style": "Cinematic Lighting",
+    "materiality": "Architectural Sketch",
+    "hex_palette": [
+      "#1e2d2f",
+      "#cd9631",
+      "#69766e",
+      "#889fa1",
+      "#82939c"
+    ],
+    "filename": "jamsheerjemshi_1765129779669.jpg",
+    "generated_prompt": "Architectural floor plan, Planometric View, style of Corona Render, Cinematic Lighting, Architectural Sketch, color palette: #1e2d2f, #cd9631, #69766e, #889fa1, #82939c"
+  },
+  "keisharizkyp_1765129760908.jpg": {
+    "id": "keisharizkyp_1765129760908",
+    "title": "Warm Realistic",
+    "viewpoint": "Isometric Projection",
+    "lighting_engine": "V-Ray 6",
+    "lighting_style": "Soft Area Lighting",
+    "materiality": "Neon Glow",
+    "hex_palette": [
+      "#262323",
+      "#bd7858",
+      "#73382e",
+      "#898894",
+      "#8b9493"
+    ],
+    "filename": "keisharizkyp_1765129760908.jpg",
+    "generated_prompt": "Architectural floor plan, Isometric Projection, style of V-Ray 6, Soft Area Lighting, Neon Glow, color palette: #262323, #bd7858, #73382e, #898894, #8b9493"
+  },
+  "ltavzarashvili_1764873436680.jpg": {
+    "id": "ltavzarashvili_1764873436680",
+    "title": "Emerald Eco",
+    "viewpoint": "Isometric Projection",
+    "lighting_engine": "Unreal Engine 5",
+    "lighting_style": "Cinematic Lighting",
+    "materiality": "PBR Materials",
+    "hex_palette": [
+      "#27262d",
+      "#cf7b37",
+      "#685248",
+      "#84756d",
+      "#6a666e"
+    ],
+    "filename": "ltavzarashvili_1764873436680.jpg",
+    "generated_prompt": "Architectural floor plan, Isometric Projection, style of Unreal Engine 5, Cinematic Lighting, PBR Materials, color palette: #27262d, #cf7b37, #685248, #84756d, #6a666e"
+  },
+  "rk1772252944_1764870841949.jpg": {
+    "id": "rk1772252944_1764870841949",
+    "title": "Teal Blueprint",
+    "viewpoint": "Isometric Projection",
+    "lighting_engine": "Octane Render",
+    "lighting_style": "Cinematic Lighting",
+    "materiality": "PBR Materials",
+    "hex_palette": [
+      "#1a2a34",
+      "#afc0ca",
+      "#638fae",
+      "#4b697e",
+      "#929396"
+    ],
+    "filename": "rk1772252944_1764870841949.jpg",
+    "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Cinematic Lighting, PBR Materials, color palette: #1a2a34, #afc0ca, #638fae, #4b697e, #929396"
+  },
+  "rk1772252944_1765129791281.jpg": {
+    "id": "rk1772252944_1765129791281",
+    "title": "Modern Chic",
+    "viewpoint": "Isometric Projection",
+    "lighting_engine": "Octane Render",
+    "lighting_style": "Soft Area Lighting",
+    "materiality": "Matte Finish",
+    "hex_palette": [
+      "#0c2e2f",
+      "#88a8a8",
+      "#2b6e6e",
+      "#768989",
+      "#638b94"
+    ],
+    "filename": "rk1772252944_1765129791281.jpg",
+    "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Soft Area Lighting, Matte Finish, color palette: #0c2e2f, #88a8a8, #2b6e6e, #768989, #638b94"
+  },
+  "sthaayidesigns_1764870792963.jpg": {
+    "id": "sthaayidesigns_1764870792963",
+    "title": "Crimson 3D",
+    "viewpoint": "Planometric View",
+    "lighting_engine": "V-Ray 6",
+    "lighting_style": "Global Illumination",
+    "materiality": "Neon Glow",
+    "hex_palette": [
+      "#2a3432",
+      "#bfbe78",
+      "#687570",
+      "#8b9c97",
+      "#8c909c"
+    ],
+    "filename": "sthaayidesigns_1764870792963.jpg",
+    "generated_prompt": "Architectural floor plan, Planometric View, style of V-Ray 6, Global Illumination, Neon Glow, color palette: #2a3432, #bfbe78, #687570, #8b9c97, #8c909c"
+  },
+  "sthaayidesigns_1764870808400.jpg": {
+    "id": "sthaayidesigns_1764870808400",
+    "title": "Obsidian & Orange",
+    "viewpoint": "Top-Down Orthographic",
+    "lighting_engine": "Octane Render",
+    "lighting_style": "Ambient Occlusion",
+    "materiality": "Matte Finish",
+    "hex_palette": [
+      "#343639",
+      "#d1d0ce",
+      "#7c7b7b",
+      "#9b9c99",
+      "#93939c"
+    ],
+    "filename": "sthaayidesigns_1764870808400.jpg",
+    "generated_prompt": "Architectural floor plan, Top-Down Orthographic, style of Octane Render, Ambient Occlusion, Matte Finish, color palette: #343639, #d1d0ce, #7c7b7b, #9b9c99, #93939c"
+  },
+  "sthaayidesigns_1764870820100.jpg": {
+    "id": "sthaayidesigns_1764870820100",
+    "title": "Gilded Noir",
+    "viewpoint": "Isometric Projection",
+    "lighting_engine": "Unreal Engine 5",
+    "lighting_style": "Ambient Occlusion",
+    "materiality": "Glossy Reflections",
+    "hex_palette": [
+      "#2b323b",
+      "#656f7e",
+      "#b1b5bd",
+      "#7a889d",
+      "#8a9cad"
+    ],
+    "filename": "sthaayidesigns_1764870820100.jpg",
+    "generated_prompt": "Architectural floor plan, Isometric Projection, style of Unreal Engine 5, Ambient Occlusion, Glossy Reflections, color palette: #2b323b, #656f7e, #b1b5bd, #7a889d, #8a9cad"
+  },
+  "sthaayidesigns_1765129798756.jpg": {
+    "id": "sthaayidesigns_1765129798756",
+    "title": "Nordic Light",
+    "viewpoint": "Top-Down Orthographic",
+    "lighting_engine": "Corona Render",
+    "lighting_style": "Global Illumination",
+    "materiality": "Neon Glow",
+    "hex_palette": [
+      "#8b2b1f",
+      "#c8bec4",
+      "#ce4a36",
+      "#330f0d",
+      "#9d9198"
+    ],
+    "filename": "sthaayidesigns_1765129798756.jpg",
+    "generated_prompt": "Architectural floor plan, Top-Down Orthographic, style of Corona Render, Global Illumination, Neon Glow, color palette: #8b2b1f, #c8bec4, #ce4a36, #330f0d, #9d9198"
+  }
+}
