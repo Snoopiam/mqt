@@ -1,16 +1,55 @@
-# React + Vite
+# MQT: The AI Maquettiste
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**MQT** (short for *Maquettiste*) is an advanced web application designed to bridge the gap between technical floor plans and artistic architectural presentations. It allows users to upload 2D CAD drawings and instantly visualize them in various artistic styles using a "Visual Forensics" approach to style transfer.
 
-Currently, two official plugins are available:
+## Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **Forensic Style Transfer**: Select from a curated list of architecturally forensic styles (e.g., "Emerald Eco", "Gilded Noir") defined by precise Hex palettes, lighting engines, and materiality.
+-   **Image-Free UI**: The application uses a lightweight, data-driven UI where style thumbnails are generated programmatically from "Color DNA" gradients, keeping the app fast and efficient.
+-   **Split-View Comparison**: Real-time side-by-side comparison of your original floor plan and the AI-generated render, featuring synchronized Zoom and Pan for detailed inspection.
+-   **Dark Mode Aesthetics**: A premium, highly polished dark mode interface designed for creative professionals.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **Frontend**: React (Vite)
+-   **Styling**: Vanilla CSS (Variables & Tokens)
+-   **Icons**: Lucide React
+-   **Analysis**: Custom Node.js scripts for forensic data extraction.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/Snoopiam/mqt.git
+    cd mqt
+    ```
+
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+
+3.  **Run the analysis script (optional)**:
+    If you add new presets to `src/assets/presets`, regenerate the forensic data:
+    ```bash
+    npm run analyze
+    ```
+
+4.  **Start the development server**:
+    ```bash
+    npm run dev
+    ```
+
+5.  **Build for production**:
+    ```bash
+    npm run build
+    ```
+
+## Project Structure
+
+-   `src/components`: Core UI components (SplitView, Controls, Hero, etc.).
+-   `src/data`: Contains `style_prompts.json`, the forensic DNA database.
+-   `scripts/analyze_presets.js`: Tool to extract color/style attributes from images.
+
+---
+*Created by SnoopLabs*
