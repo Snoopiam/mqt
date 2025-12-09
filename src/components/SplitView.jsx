@@ -1,253 +1,178 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { MoveHorizontal, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useSpring, useTransform, useDragControls } from 'framer-motion';
+import { Minus, Plus, Maximize, Move } from 'lucide-react';
 
 const SplitView = ({ beforeImage, afterImage }) => {
-    const [sliderPosition, setSliderPosition] = useState(50);
     const containerRef = useRef(null);
-
-    // Transform State
-    const [scale, setScale] = useState(1);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isDragging, setIsDragging] = useState(false);
+    const [sliderPosition, setSliderPosition] = useState(50);
     const [isResizing, setIsResizing] = useState(false);
-    const lastPos = useRef({ x: 0, y: 0 });
 
-    // Slider Drag Handlers
-    const handleSliderStart = (e) => {
-        e.stopPropagation();
+    // Zoom/Pan State
+    const [scale, setScale] = useState(1);
+    const [pan, setPan] = useState({ x: 0, y: 0 });
+    const isDraggingPan = useRef(false);
+    const lastMousePos = useRef({ x: 0, y: 0 });
+
+    // Spring Physics for Slider
+    // We map the slider 0-100 to a motion value
+    const x = useSpring(50, { stiffness: 300, damping: 30 }); // Elastic feel
+
+    const handleMouseMove = (e) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+
+        // Handle Slider Drag
+        if (isResizing) {
+            let newPos = ((e.clientX - rect.left) / rect.width) * 100;
+            newPos = Math.max(0, Math.min(100, newPos));
+            setSliderPosition(newPos);
+            x.set(newPos); // Update spring
+        }
+
+        // Handle Pan Drag
+        if (isDraggingPan.current) {
+            const dx = e.clientX - lastMousePos.current.x;
+            const dy = e.clientY - lastMousePos.current.y;
+            setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+            lastMousePos.current = { x: e.clientX, y: e.clientY };
+        }
+    };
+
+    const handleMouseDown = (e) => {
         setIsResizing(true);
     };
 
-    const handleSliderMove = (clientX) => {
-        if (!containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-        setSliderPosition((x / rect.width) * 100);
+    const handleMouseUp = () => {
+        setIsResizing(false);
+        isDraggingPan.current = false;
     };
 
     // Pan Handlers
-    const handlePanStart = (clientX, clientY) => {
-        setIsDragging(true);
-        lastPos.current = { x: clientX, y: clientY };
+    const startPan = (e) => {
+        if (isResizing) return; // Prioritize slider
+        isDraggingPan.current = true;
+        lastMousePos.current = { x: e.clientX, y: e.clientY };
     };
 
-    const handlePanMove = (clientX, clientY) => {
-        const dx = clientX - lastPos.current.x;
-        const dy = clientY - lastPos.current.y;
-        setPosition(prev => ({ x: prev.x + dx, y: prev.y + dy }));
-        lastPos.current = { x: clientX, y: clientY };
-    };
-
-    // Global Event Listeners for Dragging
-    useEffect(() => {
-        const onMouseMove = (e) => {
-            if (isResizing) {
-                e.preventDefault();
-                handleSliderMove(e.clientX);
-            } else if (isDragging) {
-                e.preventDefault();
-                handlePanMove(e.clientX, e.clientY);
-            }
-        };
-
-        const onTouchMove = (e) => {
-            if (isResizing) {
-                handleSliderMove(e.touches[0].clientX);
-            } else if (isDragging) {
-                handlePanMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        };
-
-        const onUp = () => {
-            setIsResizing(false);
-            setIsDragging(false);
-        };
-
-        if (isResizing || isDragging) {
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('touchmove', onTouchMove, { passive: false });
-            window.addEventListener('mouseup', onUp);
-            window.addEventListener('touchend', onUp);
-        }
-
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('touchmove', onTouchMove);
-            window.removeEventListener('mouseup', onUp);
-            window.removeEventListener('touchend', onUp);
-        };
-    }, [isResizing, isDragging]);
-
-    // Zoom Handler
+    // Zoom Handlers
     const handleWheel = (e) => {
-        if (e.ctrlKey || e.metaKey || e.deltaY) {
-            // Simple zoom logic
-            e.preventDefault();
-            const zoomSensitivity = 0.001;
-            const delta = -e.deltaY * zoomSensitivity;
-            const newScale = Math.min(Math.max(0.1, scale + delta), 5);
-            setScale(newScale);
-        }
+        e.preventDefault();
+        const delta = e.deltaY * -0.001;
+        const newScale = Math.min(Math.max(1, scale + delta), 5); // Clamp 1x to 5x
+        setScale(newScale);
     };
 
-    const handleZoomIn = () => setScale(s => Math.min(s * 1.2, 5));
-    const handleZoomOut = () => setScale(s => Math.max(s / 1.2, 0.1));
-    const handleFit = () => {
-        setScale(1);
-        setPosition({ x: 0, y: 0 });
-    }
+    // Attach/Detach global listeners
+    useEffect(() => {
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [isResizing, scale]);
 
-    // Common Image Style
-    const imageStyle = {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'contain',
-        transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-        transformOrigin: 'center center',
-        transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-        userSelect: 'none',
-        pointerEvents: 'none', // Allow events to pass to container
-        imageRendering: 'high-quality' // Optimize for readability
-    };
 
     return (
         <div
+            className="glass-panel"
             ref={containerRef}
             onWheel={handleWheel}
-            onMouseDown={(e) => handlePanStart(e.clientX, e.clientY)}
-            onTouchStart={(e) => handlePanStart(e.touches[0].clientX, e.touches[0].clientY)}
+            onMouseDown={startPan}
             style={{
                 position: 'relative',
                 width: '100%',
                 height: '100%',
                 overflow: 'hidden',
-                cursor: isDragging ? 'grabbing' : 'grab',
-                backgroundColor: '#050505',
-                touchAction: 'none'
+                cursor: isDraggingPan.current ? 'grabbing' : 'grab',
+                userSelect: 'none'
             }}
         >
-            {/* Render Layer (Background) */}
-            <img
-                src={afterImage}
-                alt="Render"
-                style={imageStyle}
-                draggable={false}
-            />
-
-            {/* Original Layer (Foreground - Clipped) */}
+            {/* Renders layers with Masking */}
             <div style={{
-                position: 'absolute',
-                top: 0, left: 0,
-                width: `${sliderPosition}%`,
-                height: '100%',
-                overflow: 'hidden',
-                borderRight: '1px solid rgba(255,255,255,0.5)',
-                pointerEvents: 'none',
-                backgroundColor: '#050505'
+                position: 'absolute', inset: 0,
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
+                transformOrigin: 'center',
+                transition: isDraggingPan.current ? 'none' : 'transform 0.1s ease-out',
+                willChange: 'transform'
             }}>
+                {/* Before Image (Background) */}
                 <img
                     src={beforeImage}
                     alt="Original"
                     style={{
-                        ...imageStyle,
-                        // We need to counter the width clipping? No, the container is 100% width of parent, but CLIPPED.
-                        // Wait. If the parent div is 50% width, the image inside (100% width) will be squished? 
-                        // YES.
-                        // FIX: The width of the image inside must be the width of the MAIN container, not this clipped container.
-                        width: containerRef.current ? containerRef.current.clientWidth : '100vw',
-                        maxWidth: 'none'
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                        objectFit: 'contain',
+                        pointerEvents: 'none'
                     }}
-                    draggable={false}
                 />
+
+                {/* After Image (Foreground, Masked) */}
+                <motion.div
+                    style={{
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                        clipPath: useTransform(x, value => `inset(0 ${100 - value}% 0 0)`), // Motion value drives clip
+                    }}
+                >
+                    <img
+                        src={afterImage}
+                        alt="Render"
+                        style={{
+                            width: '100%', height: '100%',
+                            objectFit: 'contain',
+                            pointerEvents: 'none'
+                        }}
+                    />
+                </motion.div>
             </div>
 
-            {/* Slider Handle */}
-            <div
-                onMouseDown={handleSliderStart}
-                onTouchStart={handleSliderStart}
+            {/* Drag Handle (Driven by Spring) */}
+            <motion.div
                 style={{
                     position: 'absolute',
                     top: 0, bottom: 0,
-                    left: `${sliderPosition}%`,
-                    width: '40px', // Invisible grab area
-                    transform: 'translateX(-50%)',
-                    cursor: 'col-resize',
+                    left: useTransform(x, value => `${value}%`), // Spring drives position
+                    width: '4px',
+                    background: 'rgba(255, 77, 0, 0.8)',
+                    cursor: 'ew-resize',
                     zIndex: 20,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    boxShadow: '0 0 10px rgba(255, 77, 0, 0.5)'
                 }}
+                onMouseDown={(e) => { e.stopPropagation(); handleMouseDown(e); }}
             >
-                {/* Visible Line */}
-                <div style={{ width: '2px', height: '100%', backgroundColor: 'white', boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
-
-                {/* Handle Circle */}
                 <div style={{
-                    position: 'absolute',
-                    width: '40px', height: '40px',
+                    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                    width: '32px', height: '32px',
                     backgroundColor: 'white',
                     borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: 'black',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-                    border: '2px solid var(--bg-primary)'
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    border: '2px solid rgba(255, 77, 0, 0.8)'
                 }}>
-                    <MoveHorizontal size={20} />
+                    <Move size={16} color="#FF4D00" />
+                </div>
+            </motion.div>
+
+            {/* HUD Controls */}
+            <div style={{
+                position: 'absolute', bottom: '24px', right: '24px',
+                display: 'flex', gap: '8px', zIndex: 30
+            }}>
+                <div className="glass-card" style={{ padding: '8px 12px', borderRadius: '8px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <button onClick={() => setScale(s => Math.max(1, s - 0.5))} style={btnStyle}><Minus size={16} /></button>
+                    <span style={{ fontSize: '0.8rem', minWidth: '40px', textAlign: 'center' }}>{Math.round(scale * 100)}%</span>
+                    <button onClick={() => setScale(s => Math.min(5, s + 0.5))} style={btnStyle}><Plus size={16} /></button>
+                    <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.2)' }} />
+                    <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} style={btnStyle}><Maximize size={16} /></button>
                 </div>
             </div>
-
-            {/* Zoom Controls */}
-            <div style={{
-                position: 'absolute',
-                bottom: '24px', left: '50%',
-                transform: 'translateX(-50%)',
-                display: 'flex', gap: '8px',
-                background: 'rgba(0,0,0,0.8)',
-                padding: '8px', borderRadius: '12px',
-                border: '1px solid var(--border-subtle)',
-                zIndex: 30
-            }}>
-                <button onClick={handleZoomOut} style={btnStyle} title="Zoom Out"><ZoomOut size={18} /></button>
-                <button onClick={handleFit} style={btnStyle} title="Reset"><Maximize size={18} /></button>
-                <button onClick={handleZoomIn} style={btnStyle} title="Zoom In"><ZoomIn size={18} /></button>
-            </div>
-
-            {/* Labels */}
-            <LabelBox text="ORIGINAL" left />
-            <LabelBox text="RENDER" right />
-
         </div>
     );
 };
 
 const btnStyle = {
-    background: 'transparent',
-    border: 'none',
-    color: 'white',
-    cursor: 'pointer',
-    padding: '4px',
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px'
 };
-
-const LabelBox = ({ text, left, right }) => (
-    <div style={{
-        position: 'absolute',
-        top: '20px',
-        [left ? 'left' : 'right']: '20px',
-        background: 'rgba(0,0,0,0.7)',
-        backdropFilter: 'blur(4px)',
-        padding: '6px 12px', borderRadius: '6px',
-        color: 'white', fontSize: '12px', fontWeight: 'bold', letterSpacing: '0.1em',
-        border: '1px solid rgba(255,255,255,0.1)',
-        pointerEvents: 'none',
-        zIndex: 5
-    }}>
-        {text}
-    </div>
-);
 
 export default SplitView;

@@ -5,16 +5,19 @@
 ## Key Features
 
 -   **Forensic Style Transfer**: Select from a curated list of architecturally forensic styles (e.g., "Emerald Eco", "Gilded Noir") defined by precise Hex palettes, lighting engines, and materiality.
--   **Image-Free UI**: The application uses a lightweight, data-driven UI where style thumbnails are generated programmatically from "Color DNA" gradients, keeping the app fast and efficient.
--   **Split-View Comparison**: Real-time side-by-side comparison of your original floor plan and the AI-generated render, featuring synchronized Zoom and Pan for detailed inspection.
--   **Dark Mode Aesthetics**: A premium, highly polished dark mode interface designed for creative professionals.
+-   **High-Fidelity Interaction**: Experience premium "Forensic Flip Cards" that reveal style DNA on hover, and an elastic "Spring Physics" comparison slider.
+-   **Glassmorphism UI**: A production-grade "Apple Vision" inspired aesthetic with frosted glass sidebars and controls.
+-   **Image-Free UI**: The application uses a lightweight, data-driven UI where style thumbnails are generated programmatically from "Color DNA" gradients.
+-   **Split-View Comparison**: Real-time side-by-side comparison featuring synchronized Zoom and Pan for detailed inspection.
 
 ## Tech Stack
 
 -   **Frontend**: React (Vite)
--   **Styling**: Vanilla CSS (Variables & Tokens)
+-   **Animation**: Framer Motion (Spring Physics, 3D Transforms)
+-   **Styling**: Vanilla CSS (Variables, Glassmorphism Tokens)
 -   **Icons**: Lucide React
 -   **Analysis**: Custom Node.js scripts for forensic data extraction.
+-   **Rendering**: REST API integration ready (customizable endpoint).
 
 ## Getting Started
 

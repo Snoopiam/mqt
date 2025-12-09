@@ -1,194 +1,164 @@
-import React, { useState, useEffect } from 'react';
-import { Settings, Zap, Grid, Tag, Droplet } from 'lucide-react';
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Zap, Grid, Tag, Droplet, Layers } from 'lucide-react';
 import styleData from '../data/style_prompts.json';
 
-// Dynamically import all images from the presets folder
-const presetImages = import.meta.glob('../assets/presets/*.{jpg,png,jpeg}', { eager: true });
-
 const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating }) => {
-    const [presets, setPresets] = useState([]);
-
-    useEffect(() => {
-        // Merge the imported images with the forensic JSON data
-        const loadedPresets = Object.entries(presetImages).map(([path, module]) => {
-            const fileName = path.split('/').pop(); // Get filename with extension to match JSON keys
-            const id = fileName.split('.')[0];
-            const forensicData = styleData[fileName] || {};
-
-            return {
-                id: id,
-                name: forensicData.title || id.replace(/[_-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                image: module.default,
-                ...forensicData
-            };
-        });
-        setPresets(loadedPresets);
-    }, []);
+    // Convert JSON object to array for mapping
+    const presets = Object.values(styleData).map(p => ({
+        ...p,
+        name: p.title || p.id
+    }));
 
     const activePresetData = presets.find(p => p.id === currentPreset);
 
+    // Helper: Dynamic Gradient
+    const getGradient = (palette) => {
+        if (!palette || palette.length === 0) return 'gray';
+        const stops = palette.map((color, i) => `${color} ${i * (100 / palette.length)}%`).join(', ');
+        return `linear-gradient(135deg, ${stops})`;
+    };
+
     return (
-        <div style={{
-            width: '360px', // Slightly wider for forensic data
-            borderLeft: '1px solid var(--border-subtle)',
-            backgroundColor: 'var(--bg-secondary)',
+        <div className="glass-panel" style={{
+            width: '360px',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
-            boxShadow: '-4px 0 20px rgba(0,0,0,0.2)',
-            zIndex: 5,
-            height: '100%',
-            overflow: 'hidden'
+            zIndex: 30,
+            overflow: 'hidden' // Contain scroll
         }}>
-            <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-subtle)', flexShrink: 0 }}>
-                <h2 style={{ fontSize: '1.1rem', margin: 0 }}>Visual Forensics</h2>
-                <p style={{ margin: '0.5rem 0 0', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                    Select a style to view its DNA
+            {/* Header */}
+            <div style={{ padding: '24px 24px 16px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Layers size={18} color="var(--brand-orange)" />
+                    Style Forensics
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                    Select a forensic profile to apply.
                 </p>
             </div>
 
-            {/* Scrollable Area */}
-            <div style={{
-                flex: 1,
-                overflowY: 'auto',
-                padding: '0 1.5rem',
-                paddingBottom: '2rem'
-            }}>
-                <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.1em', marginBottom: '1rem', marginTop: '1rem' }}>
-                    Detected Styles
-                </h3>
-
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr',
-                    gap: '0.75rem'
-                }}>
-                    {presets.map(preset => (
-                        <button
+            {/* Scrollable List */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {presets.map((preset) => (
+                        <PresetCard
                             key={preset.id}
+                            preset={preset}
+                            isActive={currentPreset === preset.id}
                             onClick={() => onSelect(preset.id)}
-                            style={{
-                                display: 'flex', alignItems: 'flex-start', gap: '1rem',
-                                padding: '0.75rem',
-                                backgroundColor: currentPreset === preset.id ? 'var(--bg-panel)' : 'transparent',
-                                border: `1px solid ${currentPreset === preset.id ? 'var(--brand-orange)' : 'var(--border-subtle)'}`,
-                                borderRadius: '8px',
-                                color: 'var(--text-primary)',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                textAlign: 'left',
-                                position: 'relative',
-                                overflow: 'hidden'
-                            }}
-                        >
-                            {/* Thumbnail */}
-                            <div style={{
-                                width: '60px', height: '60px', borderRadius: '6px',
-                                backgroundImage: `url(${preset.image})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                flexShrink: 0
-                            }} />
-
-                            <div style={{ minWidth: 0, flex: 1 }}>
-                                <span style={{
-                                    display: 'block',
-                                    fontWeight: 700,
-                                    fontSize: '0.9rem',
-                                    marginBottom: '4px',
-                                    color: currentPreset === preset.id ? 'var(--brand-orange)' : 'var(--text-primary)'
-                                }}>
-                                    {preset.name}
-                                </span>
-
-                                {/* Forensic Tags */}
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                                    <span style={tagStyle}>{preset.lighting_engine}</span>
-                                    <span style={tagStyle}>{preset.viewpoint}</span>
-                                </div>
-                            </div>
-                        </button>
+                            getGradient={getGradient}
+                        />
                     ))}
                 </div>
-
-                {/* Active Preset Forensic Analysis Panel */}
-                {activePresetData && activePresetData.hex_palette && (
-                    <div style={{
-                        marginTop: '2rem',
-                        padding: '1rem',
-                        backgroundColor: 'rgba(0,0,0,0.3)',
-                        borderRadius: '8px',
-                        border: '1px solid var(--border-subtle)'
-                    }}>
-                        <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                            Forensic DNA
-                        </h4>
-
-                        {/* Hex Palette */}
-                        <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
-                            {activePresetData.hex_palette.map((hex, i) => (
-                                <div key={i} title={hex} style={{
-                                    width: '24px', height: '24px', borderRadius: '4px',
-                                    backgroundColor: hex,
-                                    border: '1px solid rgba(255,255,255,0.2)',
-                                    cursor: 'help'
-                                }} />
-                            ))}
-                        </div>
-
-                        {/* Attribute List */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px', fontSize: '0.8rem' }}>
-                            <span style={{ color: 'var(--text-muted)' }}>Materiality:</span>
-                            <span style={{ color: 'var(--text-primary)' }}>{activePresetData.materiality}</span>
-
-                            <span style={{ color: 'var(--text-muted)' }}>Lighting:</span>
-                            <span style={{ color: 'var(--text-primary)' }}>{activePresetData.lighting_style}</span>
-                        </div>
-                    </div>
-                )}
             </div>
 
-            <div style={{
-                padding: '1.5rem',
-                borderTop: '1px solid var(--border-subtle)',
-                marginTop: 'auto',
-                backgroundColor: 'var(--bg-secondary)'
-            }}>
-                <button
-                    onClick={onGenerate}
-                    disabled={isGenerating}
-                    style={{
-                        width: '100%',
-                        padding: '1rem',
-                        backgroundColor: isGenerating ? 'var(--bg-panel)' : 'var(--brand-orange)',
-                        color: isGenerating ? 'var(--text-muted)' : 'black',
-                        fontWeight: '800',
-                        fontSize: '1rem',
-                        border: 'none',
-                        borderRadius: '12px',
-                        cursor: isGenerating ? 'not-allowed' : 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        transition: 'all 0.2s'
-                    }}
-                >
-                    <Zap size={20} className={isGenerating ? "spin" : ""} />
-                    {isGenerating ? 'Rendering...' : 'Generate Render'}
-                </button>
+            {/* Footer / Generate Action */}
+            <div style={{ p: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+                <div style={{ padding: '20px' }}>
+                    <button
+                        onClick={onGenerate}
+                        disabled={!currentPreset || isGenerating}
+                        style={{
+                            width: '100%',
+                            padding: '14px',
+                            background: isGenerating ? '#333' : 'var(--brand-orange)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontWeight: 600,
+                            cursor: (!currentPreset || isGenerating) ? 'not-allowed' : 'pointer',
+                            opacity: (!currentPreset || isGenerating) ? 0.7 : 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            transition: 'all 0.2s ease',
+                            boxShadow: isGenerating ? 'none' : '0 4px 12px rgba(255, 77, 0, 0.3)'
+                        }}
+                    >
+                        {isGenerating ? (
+                            <>
+                                <span className="loader" style={{ width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', display: 'inline-block', animation: 'spin 1s linear infinite' }}></span>
+                                Neural Processing...
+                            </>
+                        ) : (
+                            <>
+                                <Zap size={18} fill="currentColor" />
+                                Generate Render
+                            </>
+                        )}
+                    </button>
+                    <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                </div>
             </div>
         </div>
-    )
-}
-
-const tagStyle = {
-    fontSize: '0.65rem',
-    padding: '2px 6px',
-    borderRadius: '4px',
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    color: 'var(--text-secondary)',
-    whiteSpace: 'nowrap'
+    );
 };
+
+// 3D Flip Card Component
+const PresetCard = ({ preset, isActive, onClick, getGradient }) => {
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    return (
+        <div
+            style={{ position: 'relative', height: '80px', perspective: '1000px', cursor: 'pointer' }}
+            onMouseEnter={() => setIsFlipped(true)}
+            onMouseLeave={() => setIsFlipped(false)}
+            onClick={onClick}
+        >
+            <motion.div
+                initial={false}
+                animate={{ rotateX: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+                style={{
+                    width: '100%', height: '100%', position: 'relative', transformStyle: 'preserve-3d',
+                }}
+            >
+                {/* FRONT FACE */}
+                <div className={`glass-card ${isActive ? 'active' : ''}`} style={{
+                    position: 'absolute', width: '100%', height: '100%', backfaceVisibility: 'hidden',
+                    display: 'flex', alignItems: 'center', padding: '10px', gap: '12px', borderRadius: '8px',
+                    borderColor: isActive ? 'var(--brand-orange)' : undefined,
+                    background: isActive ? 'rgba(255, 77, 0, 0.1)' : undefined
+                }}>
+                    <div style={{
+                        width: '50px', height: '50px', borderRadius: '6px',
+                        background: getGradient(preset.hex_palette),
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                    }} />
+                    <div>
+                        <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{preset.name}</div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Tag size={10} /> {preset.title.split(' ')[0]} Style
+                        </div>
+                    </div>
+                </div>
+
+                {/* BACK FACE (Forensic Data) */}
+                <div style={{
+                    position: 'absolute', width: '100%', height: '100%', backfaceVisibility: 'hidden',
+                    transform: 'rotateX(180deg)',
+                    background: '#1a1a1a', borderRadius: '8px', border: '1px solid var(--brand-blue)',
+                    padding: '8px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px'
+                }}>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--brand-blue)', fontWeight: 700, letterSpacing: '0.05em' }}>FORENSIC MATCH</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
+                        <DataTag label="Engine" value={preset.lighting_engine} />
+                        <DataTag label="Material" value={preset.materiality} />
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+const DataTag = ({ label, value }) => (
+    <div style={{ fontSize: '0.65rem', background: 'rgba(0, 122, 255, 0.1)', padding: '2px 4px', borderRadius: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span style={{ opacity: 0.7 }}>{label}:</span> <span style={{ color: 'white' }}>{value.split(' ')[0]}</span>
+    </div>
+);
 
 export default Controls;

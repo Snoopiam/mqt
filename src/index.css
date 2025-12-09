@@ -3,23 +3,25 @@
   --bg-primary: #0a0a0a;
   --bg-secondary: #121212;
   --bg-panel: #1a1a1a;
-  
+
   /* Text */
   --text-primary: #ffffff;
   --text-secondary: #a1a1a1;
   --text-muted: #666666;
 
   /* MQT Brand Colors */
-  --brand-orange: #FF4D00; /* Vibrant Neon Orange from presets */
-  --brand-blue: #007AFF;   /* Technical Blue */
-  
+  --brand-orange: #FF4D00;
+  /* Vibrant Neon Orange from presets */
+  --brand-blue: #007AFF;
+  /* Technical Blue */
+
   /* UI Elements */
   --border-subtle: #333333;
   --border-focus: #555555;
-  
+
   /* Elevations */
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
-  --shadow-lg: 0 8px 16px rgba(0,0,0,0.5);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
 body {
@@ -38,10 +40,12 @@ body {
   width: 8px;
   background: var(--bg-primary);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--border-subtle);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-focus);
 }
@@ -49,4 +53,46 @@ body {
 /* Utility to hide visual noise */
 .no-select {
   user-select: none;
+}
+
+/* High-Fidelity Glassmorphism System */
+.glass-panel {
+  background: rgba(18, 18, 20, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  /* Default to right border for sidebar */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Scrollbar refinement for glass panels */
+.glass-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.glass-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.glass-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

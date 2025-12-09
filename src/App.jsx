@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { generateRender } from './services/api';
 import Layout from './components/Layout';
 import Uploader from './components/Uploader';
 import SplitView from './components/SplitView';
 import Controls from './components/Controls';
 import Hero from './components/Hero';
 import { ArrowLeft } from 'lucide-react';
+// ... (imports)
+
 
 function App() {
   const [showHero, setShowHero] = useState(true);
@@ -25,24 +28,45 @@ function App() {
   };
 
   // AUTO-LOAD FOR VERIFICATION
-  React.useEffect(() => {
-    import('./assets/test_layout.png').then(module => {
-      setOriginalImage(module.default);
-      setGeneratedImage(module.default);
-      setShowHero(false);
-      // set current preset to one of the new names if possible, e.g. the first one in the list
-    });
-  }, []);
+
+
+  // AUTO-LOAD FOR VERIFICATION
 
 
 
-  const handleGenerate = () => {
+
+  const handleGenerate = async () => {
+    if (!originalImage || !currentPreset) return;
+
     setIsGenerating(true);
-    // Mock generation loading state
-    setTimeout(() => {
+    try {
+      // Prepare data for API
+      // In a real scenario, we'd need the base64 string. 
+      // For this demo/mock, we pass the URL, but the API service handles the logic.
+
+      // Find current preset forensic data
+      // We know controls has this data, but App.jsx might need to fetch it or pass it.
+      // For simplicity, we'll let Controls pass the ID, but we need the DATA.
+      // Let's import styleData here too or pass it up from Controls?
+      // Better: Import styleData here to look it up.
+
+      // Dynamic import logic is tricky inside the function without top-level import.
+      // Let's assume styleData is available or we pass the ID.
+
+      // actually, let's just make the call. The API service mock handles the image return.
+      const header = await import('./data/style_prompts.json');
+      const styleData = header.default;
+      const forensicData = styleData[Object.keys(styleData).find(key => styleData[key].id === currentPreset)];
+
+      const result = await generateRender(originalImage, forensicData);
+      setGeneratedImage(result);
+
+    } catch (error) {
+      console.error("Generation failed", error);
+      alert("Failed to generate render. Check console.");
+    } finally {
       setIsGenerating(false);
-      // In a real app, this would be the API result
-    }, 2500);
+    }
   };
 
   const handleReset = () => {
