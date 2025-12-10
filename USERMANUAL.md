@@ -31,11 +31,18 @@ This is where you define the artistic style.
 -   **Forensic Data**: Below the list, you can see the deep details of the selected style:
     -   **Prompt DNA**: The Hex codes and attributes (Lighting, Materiality) that define the look.
 
--   **Generate**: Click the orange **"Generate Render"** button to create your art. (Note: Currently functioning as a simulation).
+-   **Generate**: Click the orange **"Generate Render"** button to create your art. The AI will process your floor plan using the selected style settings.
+    *   *Note: Generation time depends on your hardware (GPU is recommended). First-time runs may take longer to load the model.*
 
 ## 4. Resetting
 To start over with a new plan:
 -   Click the **"Back" arrow** icon in the top-left corner of the workspace. This brings you back to the upload screen.
 
+## 5. Troubleshooting / Common Issues
+
+-   **"Model not loaded" Error**: Check that the backend server (`python main.py`) is running. The model takes a moment to load on startup.
+-   **Generation is slow**: Without a GPU (NVIDIA CUDA), generation runs on CPU, which can take 1-3 minutes per image.
+-   **Upload fails**: Ensure your file is a valid JPG or PNG image. PDF support is experimental.
+
 ---
-*MQT User Manual v1.0*
+*MQT User Manual v1.1*

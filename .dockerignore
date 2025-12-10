@@ -1,0 +1,8 @@
+node_modules
+.git
+.gitignore
+.gcloudignore
+Dockerfile
+README.md
+USERMANUAL.md
+.gemini

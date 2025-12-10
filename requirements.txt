@@ -1,0 +1,16 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+fastapi
+uvicorn
+python-multipart
+pydantic
+numpy
+opencv-python-headless
+pillow
+scipy
+safetensors
+torch
+xformers
+diffusers
+transformers
+accelerate

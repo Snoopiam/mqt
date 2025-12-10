@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
 import { generateRender } from './services/api';
+
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+};
 import Layout from './components/Layout';
 import Uploader from './components/Uploader';
 import SplitView from './components/SplitView';
 import Controls from './components/Controls';
 import Hero from './components/Hero';
-import { ArrowLeft } from 'lucide-react';
+
+import { ArrowLeft, Download } from 'lucide-react';
+import styleData from './data/style_prompts.json';
 // ... (imports)
 
 
 function App() {
   const [showHero, setShowHero] = useState(true);
+
   const [originalImage, setOriginalImage] = useState(null);
   const [generatedImage, setGeneratedImage] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentPreset, setCurrentPreset] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  // Cleanup memory on unmount or change
+  React.useEffect(() => {
+    return () => {
+      if (originalImage) URL.revokeObjectURL(originalImage);
+      if (generatedImage && generatedImage !== originalImage) URL.revokeObjectURL(generatedImage);
+    };
+  }, [originalImage, generatedImage]);
 
   const handleStart = () => {
     setShowHero(false);
@@ -22,18 +43,14 @@ function App() {
 
   const handleUpload = (file) => {
     if (!file) return;
+    // Release old URL if exists
+    if (originalImage) URL.revokeObjectURL(originalImage);
+
     const url = URL.createObjectURL(file);
     setOriginalImage(url);
     setGeneratedImage(url);
+    setUploadedFile(file);
   };
-
-  // AUTO-LOAD FOR VERIFICATION
-
-
-  // AUTO-LOAD FOR VERIFICATION
-
-
-
 
   const handleGenerate = async () => {
     if (!originalImage || !currentPreset) return;
@@ -41,41 +58,58 @@ function App() {
     setIsGenerating(true);
     try {
       // Prepare data for API
-      // In a real scenario, we'd need the base64 string. 
-      // For this demo/mock, we pass the URL, but the API service handles the logic.
+      let imageToSend = originalImage;
+
+      if (uploadedFile) {
+        imageToSend = await fileToBase64(uploadedFile);
+      }
 
       // Find current preset forensic data
-      // We know controls has this data, but App.jsx might need to fetch it or pass it.
-      // For simplicity, we'll let Controls pass the ID, but we need the DATA.
-      // Let's import styleData here too or pass it up from Controls?
-      // Better: Import styleData here to look it up.
-
-      // Dynamic import logic is tricky inside the function without top-level import.
-      // Let's assume styleData is available or we pass the ID.
-
-      // actually, let's just make the call. The API service mock handles the image return.
-      const header = await import('./data/style_prompts.json');
-      const styleData = header.default;
       const forensicData = styleData[Object.keys(styleData).find(key => styleData[key].id === currentPreset)];
 
-      const result = await generateRender(originalImage, forensicData);
+      if (!forensicData) {
+        throw new Error("Preset data not found");
+      }
+
+      const result = await generateRender(imageToSend, forensicData);
       setGeneratedImage(result);
 
     } catch (error) {
-      console.error("Generation failed", error);
-      alert("Failed to generate render. Check console.");
+      // console.error("Generation failed", error);
+      alert(`Generation failed: ${error.message || "Unknown error"}. Please check the console.`);
     } finally {
       setIsGenerating(false);
     }
   };
 
   const handleReset = () => {
+    if (originalImage) URL.revokeObjectURL(originalImage);
+    if (generatedImage && generatedImage !== originalImage) URL.revokeObjectURL(generatedImage);
+
     setOriginalImage(null);
     setGeneratedImage(null);
+    setUploadedFile(null);
   };
 
+  const handleDownload = () => {
+    if (!generatedImage) return;
+    const link = document.createElement('a');
+    link.href = generatedImage;
+    link.download = `mqt-render-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
+
   if (showHero) {
-    return <Hero onStart={handleStart} />;
+    return (
+      <>
+        <Hero onStart={handleStart} />
+
+      </>
+    );
   }
 
   return (
@@ -139,6 +173,35 @@ function App() {
               }}
             >
               <ArrowLeft size={20} />
+            </button>
+
+            {/* Download Button */}
+            <button
+              onClick={handleDownload}
+              title="Download Render"
+              style={{
+                position: 'absolute', top: '24px', right: '24px',
+                padding: '10px',
+                background: 'rgba(0,0,0,0.6)',
+                backdropFilter: 'blur(8px)',
+                color: 'white', // Download is primary action, but white keeps it clean
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                zIndex: 20,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--brand-orange)';
+                e.currentTarget.style.borderColor = 'transparent';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(0,0,0,0.6)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+              }}
+            >
+              <Download size={20} />
             </button>
           </div>
 

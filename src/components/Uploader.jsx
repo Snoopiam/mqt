@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UploadCloud, Image as ImageIcon, FileWarning } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 
 const Uploader = ({ onUpload }) => {
     const [isDragOver, setIsDragOver] = useState(false);
@@ -46,6 +46,15 @@ const Uploader = ({ onUpload }) => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleClick();
+                }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload image"
             style={{
                 width: '100%',
                 maxWidth: '600px',
@@ -61,7 +70,8 @@ const Uploader = ({ onUpload }) => {
                 cursor: 'pointer',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: isDragOver ? 'scale(1.02)' : 'scale(1)',
-                boxShadow: isDragOver ? 'var(--shadow-lg)' : 'none'
+                boxShadow: isDragOver ? 'var(--shadow-lg)' : 'none',
+                outline: 'none', // We should add focus visible style in CSS or inline
             }}
         >
             <input

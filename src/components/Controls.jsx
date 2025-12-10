@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Grid, Tag, Droplet, Layers } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Zap, Tag, Layers } from 'lucide-react';
 import styleData from '../data/style_prompts.json';
 
 const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating }) => {
@@ -12,6 +12,24 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating }) => {
     }));
 
     const activePresetData = presets.find(p => p.id === currentPreset);
+
+    // Terminology Mapping for Non-Technical Users
+    const termMap = {
+        'Octane': 'Hyper-Real',
+        'V-Ray': 'Cinematic',
+        'Cycles': 'Studio',
+        'Eevee': 'Standard',
+        'Glossy': 'Polished',
+        'Matte': 'Soft',
+        'Metallic': 'Reflective'
+    };
+
+    const getTerm = (val) => {
+        if (!val) return 'Unknown';
+        // Check if val contains any of the keys
+        const key = Object.keys(termMap).find(k => val.includes(k));
+        return key ? val.replace(key, termMap[key]) : val;
+    };
 
     // Helper: Dynamic Gradient
     const getGradient = (palette) => {
@@ -50,13 +68,14 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating }) => {
                             isActive={currentPreset === preset.id}
                             onClick={() => onSelect(preset.id)}
                             getGradient={getGradient}
+                            getTerm={getTerm}
                         />
                     ))}
                 </div>
             </div>
 
             {/* Footer / Generate Action */}
-            <div style={{ p: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+            <div style={{ padding: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
                 <div style={{ padding: '20px' }}>
                     <button
                         onClick={onGenerate}
@@ -99,15 +118,26 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating }) => {
 };
 
 // 3D Flip Card Component
-const PresetCard = ({ preset, isActive, onClick, getGradient }) => {
+const PresetCard = ({ preset, isActive, onClick, getGradient, getTerm }) => {
     const [isFlipped, setIsFlipped] = useState(false);
 
     return (
         <div
-            style={{ position: 'relative', height: '80px', perspective: '1000px', cursor: 'pointer' }}
+            style={{ position: 'relative', height: '80px', perspective: '1000px', cursor: 'pointer', outline: 'none' }}
             onMouseEnter={() => setIsFlipped(true)}
             onMouseLeave={() => setIsFlipped(false)}
+            onFocus={() => setIsFlipped(true)}
+            onBlur={() => setIsFlipped(false)}
             onClick={onClick}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onClick();
+                }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={`Select preset ${preset.name}`}
         >
             <motion.div
                 initial={false}
@@ -146,8 +176,8 @@ const PresetCard = ({ preset, isActive, onClick, getGradient }) => {
                 }}>
                     <div style={{ fontSize: '0.65rem', color: 'var(--brand-blue)', fontWeight: 700, letterSpacing: '0.05em' }}>FORENSIC MATCH</div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
-                        <DataTag label="Engine" value={preset.lighting_engine} />
-                        <DataTag label="Material" value={preset.materiality} />
+                        <DataTag label="Light" value={getTerm ? getTerm(preset.lighting_engine) : preset.lighting_engine} />
+                        <DataTag label="Texture" value={getTerm ? getTerm(preset.materiality) : preset.materiality} />
                     </div>
                 </div>
             </motion.div>

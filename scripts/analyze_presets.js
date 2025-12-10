@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PRESETS_DIR = path.join(__dirname, '../src/assets/presets');
+const PRESETS_DIR = 'C:/SnoopLabs/Labs/MQT/Style Reference';
 const OUTPUT_FILE = path.join(__dirname, '../src/data/style_prompts.json');
 
 // Forensic Keywords Mapping

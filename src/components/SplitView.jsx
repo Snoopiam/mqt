@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useSpring, useTransform, useDragControls } from 'framer-motion';
-import { Minus, Plus, Maximize, Move } from 'lucide-react';
+import { Minus, Plus, Maximize, Move, RotateCcw } from 'lucide-react';
 
 const SplitView = ({ beforeImage, afterImage }) => {
     const containerRef = useRef(null);
@@ -57,10 +57,14 @@ const SplitView = ({ beforeImage, afterImage }) => {
 
     // Zoom Handlers
     const handleWheel = (e) => {
-        e.preventDefault();
-        const delta = e.deltaY * -0.001;
-        const newScale = Math.min(Math.max(1, scale + delta), 5); // Clamp 1x to 5x
-        setScale(newScale);
+        if (e.ctrlKey || e.metaKey || e.deltaY) {
+            e.preventDefault();
+            // User requested 10% steps, avoiding multiplication artifacts by working with integers
+            const direction = e.deltaY > 0 ? -1 : 1;
+            const currentPercent = Math.round(scale * 10); // e.g. 1.2 -> 12
+            const newPercent = Math.max(1, Math.min(50, currentPercent + direction)); // Min 10%, Max 500%
+            setScale(newPercent / 10);
+        }
     };
 
     // Attach/Detach global listeners
@@ -160,11 +164,11 @@ const SplitView = ({ beforeImage, afterImage }) => {
                 display: 'flex', gap: '8px', zIndex: 30
             }}>
                 <div className="glass-card" style={{ padding: '8px 12px', borderRadius: '8px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <button onClick={() => setScale(s => Math.max(1, s - 0.5))} style={btnStyle}><Minus size={16} /></button>
+                    <button onClick={() => setScale(s => Math.max(0.1, Math.round((s - 0.1) * 10) / 10))} style={btnStyle}><Minus size={16} /></button>
                     <span style={{ fontSize: '0.8rem', minWidth: '40px', textAlign: 'center' }}>{Math.round(scale * 100)}%</span>
-                    <button onClick={() => setScale(s => Math.min(5, s + 0.5))} style={btnStyle}><Plus size={16} /></button>
+                    <button onClick={() => setScale(s => Math.min(5, Math.round((s + 0.1) * 10) / 10))} style={btnStyle}><Plus size={16} /></button>
                     <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.2)' }} />
-                    <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} style={btnStyle}><Maximize size={16} /></button>
+                    <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} style={btnStyle} title="Fit to Screen"><RotateCcw size={16} /></button>
                 </div>
             </div>
         </div>
