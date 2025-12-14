@@ -1,0 +1,478 @@
+{
+  "project": "MQT v2.0 Remodel",
+  "version": "1.0.0",
+  "created": "2025-12-10",
+  "tasks": [
+    {
+      "id": "STRIP-001",
+      "title": "Remove Stable Diffusion imports and model loading",
+      "phase": "1-strip",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Remove all SD/ControlNet imports and model loading code from main.py",
+      "files": ["main.py"],
+      "lines_affected": "1-77",
+      "acceptance_criteria": [
+        "No diffusers imports",
+        "No torch imports",
+        "No ControlNet imports",
+        "No model loading on startup",
+        "App still starts (with placeholder endpoint)"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": -80
+    },
+    {
+      "id": "STRIP-002",
+      "title": "Remove SD generation endpoint code",
+      "phase": "1-strip",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Replace SD inference code in /api/generate with placeholder",
+      "files": ["main.py"],
+      "lines_affected": "185-251",
+      "acceptance_criteria": [
+        "No pipe.generate() calls",
+        "No ControlNet preprocessing",
+        "Endpoint returns 501 Not Implemented (temporary)",
+        "No SD-specific error handling"
+      ],
+      "dependencies": ["STRIP-001"],
+      "estimated_loc_change": -70
+    },
+    {
+      "id": "STRIP-003",
+      "title": "Remove SD config values",
+      "phase": "1-strip",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Remove SD model paths and inference settings from config.py",
+      "files": ["config.py"],
+      "lines_affected": "71-72, 84-89",
+      "acceptance_criteria": [
+        "No CONTROLNET_MODEL",
+        "No SD_MODEL",
+        "No DEFAULT_INFERENCE_STEPS",
+        "No DEFAULT_GUIDANCE_SCALE",
+        "Add GEMINI_API_KEY placeholder"
+      ],
+      "dependencies": ["STRIP-002"],
+      "estimated_loc_change": -10
+    },
+    {
+      "id": "STRIP-004",
+      "title": "Strip Python dependencies",
+      "phase": "1-strip",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Remove all SD-related Python packages from requirements.txt",
+      "files": ["requirements.txt"],
+      "lines_to_remove": [
+        "--extra-index-url https://download.pytorch.org/whl/cu118",
+        "torch",
+        "xformers",
+        "diffusers",
+        "transformers",
+        "accelerate",
+        "scipy",
+        "safetensors"
+      ],
+      "lines_to_add": [
+        "google-generativeai>=0.8.0",
+        "httpx"
+      ],
+      "acceptance_criteria": [
+        "No PyTorch",
+        "No diffusers",
+        "google-generativeai added",
+        "pip install succeeds"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": -6
+    },
+    {
+      "id": "STRIP-005",
+      "title": "Delete style_prompts.json",
+      "phase": "1-strip",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Remove the architectural style presets data file",
+      "files": ["src/data/style_prompts.json"],
+      "acceptance_criteria": [
+        "File deleted",
+        "No imports reference this file"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": -290
+    },
+    {
+      "id": "STRIP-006",
+      "title": "Remove forensic DNA from Controls.jsx",
+      "phase": "1-strip",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Strip lighting engine mapping and forensic DNA display from Controls component",
+      "files": ["src/components/Controls.jsx"],
+      "lines_affected": "16-32, 80-120",
+      "acceptance_criteria": [
+        "No ENGINE_DISPLAY_MAP",
+        "No DataTag component showing forensic info",
+        "Component simplified to basic style selector"
+      ],
+      "dependencies": ["STRIP-005"],
+      "estimated_loc_change": -100
+    },
+    {
+      "id": "STRIP-007",
+      "title": "Simplify api.js request format",
+      "phase": "1-strip",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Remove forensic prompt construction and ControlNet config from API calls",
+      "files": ["src/services/api.js"],
+      "lines_affected": "60-82",
+      "acceptance_criteria": [
+        "No forensicData processing",
+        "No controlnet configuration",
+        "Simple prompt passthrough",
+        "Remove negative_prompt hardcoding"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": -30
+    },
+    {
+      "id": "STRIP-008",
+      "title": "Simplify Dockerfile",
+      "phase": "1-strip",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Remove GPU dependencies and large model cache from Docker build",
+      "files": ["Dockerfile"],
+      "acceptance_criteria": [
+        "No libgl1 (OpenCV dependency)",
+        "No CUDA base image",
+        "No MODEL_CACHE_DIR setup",
+        "Smaller final image (<500MB)"
+      ],
+      "dependencies": ["STRIP-004"],
+      "estimated_loc_change": -15
+    },
+    {
+      "id": "GEMINI-001",
+      "title": "Add Gemini SDK and initialize client",
+      "phase": "2-integrate",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Set up google-generativeai client with API key from environment",
+      "files": ["main.py", "config.py"],
+      "acceptance_criteria": [
+        "genai.configure() called on startup",
+        "GEMINI_API_KEY read from env",
+        "Client initialization in lifespan",
+        "Health check returns gemini_available status"
+      ],
+      "dependencies": ["STRIP-003"],
+      "estimated_loc_change": 30
+    },
+    {
+      "id": "GEMINI-002",
+      "title": "Implement Gemini Vision image analysis",
+      "phase": "2-integrate",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Add Gemini 2.0 Flash for analyzing uploaded floor plans",
+      "files": ["main.py"],
+      "acceptance_criteria": [
+        "Can send image to Gemini Vision",
+        "Receives text analysis of floor plan",
+        "Handles API errors gracefully",
+        "Logs response for debugging"
+      ],
+      "dependencies": ["GEMINI-001"],
+      "estimated_loc_change": 50
+    },
+    {
+      "id": "GEMINI-003",
+      "title": "Implement Imagen 3 generation endpoint",
+      "phase": "2-integrate",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Create new /api/generate endpoint using Imagen 3 for image generation",
+      "files": ["main.py"],
+      "acceptance_criteria": [
+        "POST /api/generate accepts image + prompt",
+        "Calls Imagen 3 API",
+        "Returns generated image as base64",
+        "Includes metadata (model, timing)",
+        "Error handling for API failures"
+      ],
+      "dependencies": ["GEMINI-001"],
+      "estimated_loc_change": 80
+    },
+    {
+      "id": "GEMINI-004",
+      "title": "Add fallback for Imagen unavailability",
+      "phase": "2-integrate",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Implement graceful fallback if Imagen 3 is not available in region",
+      "files": ["main.py"],
+      "acceptance_criteria": [
+        "Detects Imagen 3 availability",
+        "Falls back to Gemini Vision + description",
+        "User notified of fallback mode",
+        "Clear error messages"
+      ],
+      "dependencies": ["GEMINI-003"],
+      "estimated_loc_change": 40
+    },
+    {
+      "id": "UI-001",
+      "title": "Create PromptInput component",
+      "phase": "3-ui",
+      "priority": "P0",
+      "status": "pending",
+      "description": "New text input component for natural language style prompts",
+      "files": ["src/components/PromptInput.jsx"],
+      "acceptance_criteria": [
+        "Text input with placeholder",
+        "Character count (max 500)",
+        "Clear button",
+        "Keyboard submit (Enter)",
+        "Glassmorphism styling"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": 60
+    },
+    {
+      "id": "UI-002",
+      "title": "Create StyleChips component",
+      "phase": "3-ui",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Quick-select style chips for common visualization styles",
+      "files": ["src/components/StyleChips.jsx"],
+      "acceptance_criteria": [
+        "Chip buttons for: Minimalist, Photorealistic, Blueprint, Watercolor, Sketch, 3D Render",
+        "Clicking chip populates prompt input",
+        "Visual feedback on selection",
+        "Smooth animations"
+      ],
+      "dependencies": ["UI-001"],
+      "estimated_loc_change": 50
+    },
+    {
+      "id": "UI-003",
+      "title": "Rewrite Controls.jsx for new flow",
+      "phase": "3-ui",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Replace forensic DNA panel with PromptInput and StyleChips",
+      "files": ["src/components/Controls.jsx"],
+      "acceptance_criteria": [
+        "Integrates PromptInput",
+        "Integrates StyleChips",
+        "Generate button enabled when prompt exists",
+        "Removed all 3D flip card code",
+        "Clean, simple layout"
+      ],
+      "dependencies": ["UI-001", "UI-002", "STRIP-006"],
+      "estimated_loc_change": -50
+    },
+    {
+      "id": "UI-004",
+      "title": "Update App.jsx state management",
+      "phase": "3-ui",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Adapt main app state for new prompt-based flow",
+      "files": ["src/App.jsx"],
+      "acceptance_criteria": [
+        "Remove currentPreset state",
+        "Add prompt state",
+        "Update handleGenerate for new API format",
+        "Remove forensicData from API calls"
+      ],
+      "dependencies": ["UI-003", "STRIP-007"],
+      "estimated_loc_change": -20
+    },
+    {
+      "id": "UI-005",
+      "title": "Update Hero.jsx copy",
+      "phase": "3-ui",
+      "priority": "P2",
+      "status": "pending",
+      "description": "Update landing page messaging for new Gemini-powered capabilities",
+      "files": ["src/components/Hero.jsx"],
+      "acceptance_criteria": [
+        "Updated tagline",
+        "Mention instant generation",
+        "No SD/ControlNet references"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": 5
+    },
+    {
+      "id": "UI-006",
+      "title": "Add loading progress indicator",
+      "phase": "3-ui",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Enhanced loading state with progress feedback",
+      "files": ["src/components/LoadingOverlay.jsx"],
+      "acceptance_criteria": [
+        "Animated spinner",
+        "Progress bar or percentage",
+        "Status text (Analyzing... Generating...)",
+        "Glassmorphism card"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": 40
+    },
+    {
+      "id": "TEST-001",
+      "title": "End-to-end smoke test",
+      "phase": "4-test",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Manual test of complete flow from upload to download",
+      "files": [],
+      "acceptance_criteria": [
+        "Upload image works",
+        "Enter prompt works",
+        "Generation completes",
+        "Result displays in SplitView",
+        "Download works"
+      ],
+      "dependencies": ["GEMINI-003", "UI-004"],
+      "estimated_loc_change": 0
+    },
+    {
+      "id": "TEST-002",
+      "title": "API error handling test",
+      "phase": "4-test",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Test error scenarios and edge cases",
+      "files": [],
+      "acceptance_criteria": [
+        "Invalid image handled",
+        "Empty prompt handled",
+        "API timeout handled",
+        "Rate limit handled",
+        "User sees clear error messages"
+      ],
+      "dependencies": ["TEST-001"],
+      "estimated_loc_change": 0
+    },
+    {
+      "id": "DEPLOY-001",
+      "title": "Update .env.example",
+      "phase": "5-deploy",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Update environment variable template for Gemini",
+      "files": [".env.example"],
+      "acceptance_criteria": [
+        "GEMINI_API_KEY documented",
+        "Remove HF_TOKEN",
+        "Remove MODEL_CACHE_DIR",
+        "Clear setup instructions"
+      ],
+      "dependencies": [],
+      "estimated_loc_change": -20
+    },
+    {
+      "id": "DEPLOY-002",
+      "title": "Update README.md",
+      "phase": "5-deploy",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Update documentation for new architecture",
+      "files": ["README.md"],
+      "acceptance_criteria": [
+        "Updated tech stack",
+        "New setup instructions",
+        "Gemini API key setup",
+        "No GPU requirements mentioned"
+      ],
+      "dependencies": ["TEST-001"],
+      "estimated_loc_change": 30
+    },
+    {
+      "id": "DEPLOY-003",
+      "title": "Update DEPLOYMENT.md",
+      "phase": "5-deploy",
+      "priority": "P1",
+      "status": "pending",
+      "description": "Update deployment guide for CPU-only Cloud Run",
+      "files": ["DEPLOYMENT.md"],
+      "acceptance_criteria": [
+        "No GPU instance types",
+        "Smaller memory requirements",
+        "Updated Docker build commands",
+        "Gemini API key as secret"
+      ],
+      "dependencies": ["DEPLOY-001"],
+      "estimated_loc_change": -30
+    },
+    {
+      "id": "DEPLOY-004",
+      "title": "Test Cloud Run deployment",
+      "phase": "5-deploy",
+      "priority": "P0",
+      "status": "pending",
+      "description": "Deploy to Cloud Run and verify functionality",
+      "files": [],
+      "acceptance_criteria": [
+        "Docker build succeeds",
+        "Cloud Run deploy succeeds",
+        "Health check passes",
+        "Generation works in production"
+      ],
+      "dependencies": ["TEST-001", "DEPLOY-003"],
+      "estimated_loc_change": 0
+    }
+  ],
+  "phases": {
+    "1-strip": {
+      "name": "Strip SD/ControlNet",
+      "description": "Remove all Stable Diffusion and ControlNet related code",
+      "status": "pending",
+      "tasks_count": 8
+    },
+    "2-integrate": {
+      "name": "Gemini Integration",
+      "description": "Add Google Gemini API for image generation",
+      "status": "pending",
+      "tasks_count": 4
+    },
+    "3-ui": {
+      "name": "UI Updates",
+      "description": "Update frontend for new prompt-based flow",
+      "status": "pending",
+      "tasks_count": 6
+    },
+    "4-test": {
+      "name": "Testing",
+      "description": "End-to-end and edge case testing",
+      "status": "pending",
+      "tasks_count": 2
+    },
+    "5-deploy": {
+      "name": "Deployment",
+      "description": "Documentation and production deployment",
+      "status": "pending",
+      "tasks_count": 4
+    }
+  },
+  "summary": {
+    "total_tasks": 24,
+    "p0_critical": 12,
+    "p1_important": 9,
+    "p2_nice_to_have": 3,
+    "estimated_loc_removed": -651,
+    "estimated_loc_added": 385,
+    "net_loc_change": -266
+  }
+}

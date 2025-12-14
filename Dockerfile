@@ -1,42 +1,34 @@
-# Build Stage (Frontend)
-FROM node:20-alpine AS builder
+# MQT Application - Node.js Single-Stage Build
+FROM node:20-alpine
 
 WORKDIR /app
+
+# Install system dependencies for Sharp (image processing)
+RUN apk add --no-cache \
+    libc6-compat \
+    vips-dev
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --only=production
 
-# Copy source and build
+# Copy source
 COPY . .
+
+# Build frontend
 RUN npm run build
-
-# Runtime Stage (Backend)
-FROM python:3.10-slim
-
-WORKDIR /app
-
-# Install system dependencies for OpenCV and others
-RUN apt-get update && apt-get install -y \
-    libgl1 \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy built frontend assets
-COPY --from=builder /app/dist ./dist
-
-# Copy backend code
-COPY main.py .
 
 # Environment variables
 ENV PORT=8080
+ENV NODE_ENV=production
 # Force standard output to be unbuffered (logs show up immediately)
-ENV PYTHONUNBUFFERED=1
+ENV NODE_OPTIONS="--enable-source-maps"
 
 EXPOSE 8080
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+
+CMD ["npm", "start"]
+

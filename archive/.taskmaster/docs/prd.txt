@@ -1,0 +1,299 @@
+# MQT (Maquettiste) - Product Requirements Document
+
+## 1. Product Overview
+
+### 1.1 Product Name
+MQT (Maquettiste) - AI-Powered Architectural Visualization Tool
+
+### 1.2 Product Vision
+MQT bridges the gap between technical floor plans and artistic architectural presentations by allowing users to upload 2D CAD drawings and instantly visualize them in various artistic styles using AI-powered style transfer with Stable Diffusion ControlNet.
+
+### 1.3 Target Users
+- Architects and interior designers
+- Real estate professionals
+- Property developers
+- Architecture students
+- Anyone needing quick architectural visualizations
+
+## 2. Technical Architecture
+
+### 2.1 Deployment Platform
+**Primary Platform: Google Cloud Run (ONLY)**
+
+Cloud Run provides:
+- Serverless container execution
+- Automatic scaling (0 to N instances)
+- Pay-per-use pricing
+- Built-in HTTPS and load balancing
+- Easy deployment from source or Docker images
+
+### 2.2 System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Google Cloud Run                         │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │              MQT Container                           │   │
+│  │  ┌──────────────┐    ┌────────────────────────┐    │   │
+│  │  │   Frontend   │    │       Backend          │    │   │
+│  │  │   (React)    │───▶│   (FastAPI/Python)     │    │   │
+│  │  │  Vite Build  │    │                        │    │   │
+│  │  │  Static      │    │  ┌──────────────────┐  │    │   │
+│  │  │  Files       │    │  │ Stable Diffusion │  │    │   │
+│  │  └──────────────┘    │  │  + ControlNet    │  │    │   │
+│  │                      │  │    (MLSD)        │  │    │   │
+│  │                      │  └──────────────────┘  │    │   │
+│  │                      └────────────────────────┘    │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │  Hugging Face   │
+                    │    Hub          │
+                    │  (Model Source) │
+                    └─────────────────┘
+```
+
+### 2.3 Technology Stack
+
+#### Frontend
+- **Framework**: React 19 with Vite 7
+- **Styling**: Vanilla CSS with Glassmorphism design tokens
+- **Animation**: Framer Motion (Spring Physics, 3D Transforms)
+- **Icons**: Lucide React
+- **Build**: Vite production build served as static files
+
+#### Backend
+- **Framework**: FastAPI with Uvicorn
+- **AI Models**: 
+  - Stable Diffusion v1.5 (`runwayml/stable-diffusion-v1-5`)
+  - ControlNet MLSD (`lllyasviel/sd-controlnet-mlsd`)
+- **ML Framework**: PyTorch with Diffusers library
+- **Image Processing**: Pillow, OpenCV
+
+## 3. Cloud Run Requirements
+
+### 3.1 Resource Configuration
+
+| Setting | Value | Rationale |
+|---------|-------|-----------|
+| Memory | 8Gi minimum, 16Gi recommended | AI models require significant RAM |
+| CPU | 4 vCPUs | Faster inference on CPU |
+| Timeout | 600 seconds | Model loading + inference time |
+| Max Instances | 10 (configurable) | Cost control |
+| Min Instances | 0-1 | 0 for cost savings, 1 for production |
+| Concurrency | 1 | AI generation is single-threaded |
+
+### 3.2 Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `PORT` | Auto-set | Cloud Run sets this automatically |
+| `HF_TOKEN` | Optional | Hugging Face token for model downloads |
+| `ALLOWED_ORIGINS` | Optional | CORS origins (auto-includes Cloud Run URL) |
+| `DEVICE` | Optional | Force `cpu` (Cloud Run has no GPU) |
+| `CACHE_MODELS` | Optional | Enable model caching (default: true) |
+| `MODEL_CACHE_DIR` | Optional | Model cache directory |
+
+### 3.3 Cold Start Considerations
+
+Cold starts on Cloud Run can take 60-300+ seconds due to:
+1. Container initialization
+2. Python dependencies loading
+3. AI model download from Hugging Face (~5GB)
+4. Model loading into memory
+
+**Mitigation Strategies:**
+- Use `--min-instances 1` for production
+- Consider baking models into Docker image (increases image size)
+- Implement health check endpoint for readiness
+
+## 4. API Specification
+
+### 4.1 Endpoints
+
+#### Health Check
+```
+GET /health
+Response: {
+  "status": "ok",
+  "device": "cpu",
+  "model_loaded": true
+}
+```
+
+#### Generate Image
+```
+POST /api/generate
+Content-Type: application/json
+
+Request Body:
+{
+  "image": "data:image/png;base64,<base64_encoded_image>",
+  "prompt": "modern minimalist interior, high fidelity render",
+  "negative_prompt": "text, watermark, low quality",
+  "controlnet": {
+    "module": "mlsd",
+    "weight": 1.0
+  },
+  "forensics": {
+    "hex_palette": ["#FFFFFF", "#000000"],
+    "engine": "Octane",
+    "materiality": "Concrete"
+  }
+}
+
+Response (Success):
+{
+  "status": "success",
+  "image": "data:image/png;base64,<generated_image>",
+  "meta": {
+    "processing_time": 45000,
+    "device": "cpu",
+    "inference_steps": 20
+  }
+}
+
+Response (Error):
+{
+  "detail": "Error description"
+}
+```
+
+### 4.2 Error Codes
+
+| Status | Description |
+|--------|-------------|
+| 200 | Success |
+| 400 | Bad Request (invalid image, missing fields) |
+| 422 | Validation Error (Pydantic) |
+| 500 | Server Error (generation failed) |
+| 503 | Service Unavailable (model not loaded) |
+
+## 5. Deployment Guide
+
+### 5.1 Prerequisites
+- Google Cloud account with billing enabled
+- `gcloud` CLI installed and authenticated
+- Project with Cloud Run API enabled
+
+### 5.2 Deployment Commands
+
+```bash
+# Set project
+gcloud config set project YOUR_PROJECT_ID
+
+# Enable APIs
+gcloud services enable run.googleapis.com
+gcloud services enable cloudbuild.googleapis.com
+
+# Deploy
+gcloud run deploy mqt-app \
+  --source . \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --memory 8Gi \
+  --cpu 4 \
+  --timeout 600 \
+  --max-instances 10 \
+  --concurrency 1
+
+# Set environment variables (optional)
+gcloud run services update mqt-app \
+  --update-env-vars HF_TOKEN=hf_xxx \
+  --region us-central1
+
+# For production (avoid cold starts)
+gcloud run services update mqt-app \
+  --min-instances 1 \
+  --region us-central1
+```
+
+### 5.3 Deployment Checklist
+
+- [ ] Docker build succeeds locally
+- [ ] Health endpoint responds
+- [ ] Model loads successfully
+- [ ] API generates images correctly
+- [ ] CORS configured for frontend origin
+- [ ] Timeout set to 600s+
+- [ ] Memory set to 8Gi+
+- [ ] Monitoring enabled
+
+## 6. Security Considerations
+
+### 6.1 Implemented Security
+- CORS protection with allowed origins
+- Input validation (Pydantic models)
+- Base64 image validation
+- No external network calls (except Hugging Face for model download)
+
+### 6.2 Recommendations
+- Enable Cloud Run authentication for non-public deployments
+- Use Secret Manager for HF_TOKEN in production
+- Enable Cloud Armor for DDoS protection
+- Set up VPC connector for private networking
+
+## 7. Monitoring and Observability
+
+### 7.1 Cloud Run Built-in
+- Request metrics
+- Error rates
+- Latency percentiles
+- Instance count
+- Memory/CPU utilization
+
+### 7.2 Application Logging
+- Structured logging with timestamps
+- Request tracking
+- Generation duration metrics
+- Error stack traces
+
+### 7.3 Recommended Alerts
+- Error rate > 5%
+- P95 latency > 120s
+- Memory utilization > 90%
+- Failed health checks
+
+## 8. Cost Optimization
+
+### 8.1 Cost Factors
+- CPU time (pay per 100ms)
+- Memory (pay per GB-second)
+- Requests (minimal cost)
+- Network egress (for large images)
+
+### 8.2 Optimization Strategies
+- Use min-instances: 0 for dev/staging
+- Set appropriate max-instances
+- Consider CPU allocation: "request" vs "always"
+- Monitor and adjust resources
+
+### 8.3 Estimated Costs (us-central1)
+- Idle (min=0): ~$0/month
+- Light usage (100 req/day): ~$20-50/month
+- Heavy usage (1000 req/day): ~$150-300/month
+
+## 9. Future Enhancements
+
+### 9.1 Short Term
+- Add request queuing for high traffic
+- Implement result caching
+- Add image size validation and resizing
+- Support batch processing
+
+### 9.2 Long Term
+- GPU support via GKE or Vertex AI
+- Multiple model support
+- User authentication
+- Result storage in Cloud Storage
+- Webhook callbacks for async processing
+
+## 10. Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2025-12-10 | Initial Cloud Run deployment |
+

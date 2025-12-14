@@ -1,8 +1,61 @@
-node_modules
-.git
+# Ignore these files when building Docker image
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Environment files (should be set via Cloud Run env vars)
+.env
+.env.*
+
+# Development files
+venv/
+.vscode/
+.idea/
+.DS_Store
+
+# Git
+.git/
 .gitignore
-.gcloudignore
-Dockerfile
-README.md
-USERMANUAL.md
-.gemini
+
+# Documentation and notes
+docs/
+*.md
+!README.md
+
+# Model cache (no longer needed with Gemini)
+models/
+*.safetensors
+*.ckpt
+*.pth
+
+# Logs
+logs/
+*.log
+
+# Node modules (frontend - built separately)
+node_modules/
+src/
+public/
+package.json
+package-lock.json
+vite.config.js
+index.html
+
+# Build artifacts
+dist-ssr/
+*.local
+
+# Testing
+tests/
+*_test.py
+pytest_cache/
+
+# Backup files
+*_backup.py
+main_sd_backup.py
+
+# Artifacts directory
+.gemini/

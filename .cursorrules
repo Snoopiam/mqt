@@ -1,0 +1,372 @@
+# MQT v2.0 Development Rules
+
+## Project Overview
+MQT (Maquettiste) is an AI-powered architectural visualization tool being REMODELED from Stable Diffusion to Google Gemini API. Deployed ONLY on Google Cloud Run (CPU-only, no GPU).
+
+---
+
+## REMODEL STATUS: IN PROGRESS
+
+### Migration: SD/ControlNet → Gemini API
+
+**REMOVING:**
+- Stable Diffusion v1.5
+- ControlNet MLSD
+- PyTorch, diffusers, transformers
+- 20 hardcoded style presets
+- Forensic DNA panel (lighting engine, materiality)
+- GPU requirements
+
+**ADDING:**
+- Google Gemini API (gemini-2.0-flash-exp)
+- Imagen 3 (imagen-3.0-generate-001)
+- Natural language prompt input
+- Quick style chips
+
+### Reference Documents
+- `docs/REMODEL_PLAN.md` - Complete migration plan
+- `docs/PRD.md` - Product requirements document
+- `.taskmaster/tasks.json` - Task breakdown
+
+---
+
+## Critical Deployment Rules
+
+### Cloud Run Only
+- This project deploys EXCLUSIVELY to Google Cloud Run
+- No Kubernetes, GKE, or other orchestration platforms
+- All infrastructure decisions must be Cloud Run compatible
+- Cloud Run has NO GPU support - CPU inference only (perfect for Gemini API)
+
+### Dockerfile Rules
+1. Copy ALL required Python files (main.py, config.py, etc.)
+2. Use shell form CMD: `CMD uvicorn main:app --host 0.0.0.0 --port $PORT`
+3. Never hardcode port 8080 - Cloud Run sets PORT dynamically
+4. Keep image minimal - NO model downloads needed with Gemini API
+
+### Environment Variables
+| Variable | Description |
+|----------|-------------|
+| `GEMINI_API_KEY` | **REQUIRED** - Google Gemini API key |
+| `PORT` | Auto-set by Cloud Run |
+| `K_SERVICE` | Auto-set when running on Cloud Run |
+| `ALLOWED_ORIGINS` | CORS origins (auto-includes Cloud Run URL) |
+
+---
+
+## Technology Stack (Target)
+
+### Frontend (KEEPING)
+- React 19 with JSX
+- Vite 7.x for build tooling
+- Framer Motion for animations
+- Lucide React for icons
+- Glassmorphism design system
+
+### Backend (CHANGING)
+- Python 3.10+
+- FastAPI for REST API
+- google-generativeai SDK for Gemini/Imagen
+- Pillow for image processing
+- **NO** PyTorch, diffusers, transformers
+
+### Infrastructure
+- Docker (CPU-only, lightweight)
+- Google Cloud Run
+- Google Gemini API
+
+---
+
+## Code Style Rules
+
+### Python (Backend)
+```python
+# Use type hints
+def generate_image(request: GenerationRequest) -> GenerationResponse:
+    pass
+
+# Use async/await for I/O operations
+async def call_gemini_api(prompt: str, image: bytes) -> dict:
+    pass
+
+# Use Pydantic for request/response models
+class GenerationRequest(BaseModel):
+    image: str  # base64
+    prompt: str
+    options: Optional[dict] = None
+
+# Use environment variables for config
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+# Use structured logging
+import logging
+logger = logging.getLogger(__name__)
+```
+
+### JavaScript/React (Frontend)
+```jsx
+// Use functional components with hooks
+const MyComponent = ({ prop1, prop2 }) => {
+  const [state, setState] = useState(initialValue);
+
+  useEffect(() => {
+    // side effects
+  }, [dependencies]);
+
+  return <div>...</div>;
+};
+
+// Use Framer Motion for animations
+import { motion, useSpring } from 'framer-motion';
+
+// Use Lucide for icons
+import { Upload, Download, Zap } from 'lucide-react';
+
+// Use clsx for conditional classes
+import { clsx } from 'clsx';
+className={clsx('base-class', condition && 'conditional-class')}
+```
+
+### CSS (Styling)
+```css
+/* Use CSS variables for theming */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --accent-orange: #f97316;
+}
+
+/* Use glassmorphism pattern */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+```
+
+---
+
+## API Contract (New)
+
+### POST /api/generate
+```json
+// Request
+{
+  "image": "base64_encoded_image",
+  "prompt": "Transform into modern minimalist 3D render",
+  "style": "photorealistic",
+  "options": {
+    "aspect_ratio": "1:1"
+  }
+}
+
+// Response (success)
+{
+  "success": true,
+  "image": "base64_encoded_result",
+  "metadata": {
+    "model": "imagen-3.0-generate-001",
+    "generation_time_ms": 8234
+  }
+}
+
+// Response (error)
+{
+  "success": false,
+  "error": {
+    "code": "GENERATION_FAILED",
+    "message": "..."
+  }
+}
+```
+
+### GET /health
+```json
+{
+  "status": "healthy",
+  "version": "2.0.0",
+  "gemini_available": true
+}
+```
+
+---
+
+## DO NOT (Critical)
+
+1. **DO NOT** add PyTorch, diffusers, or any SD-related packages
+2. **DO NOT** reference ControlNet, MLSD, or image conditioning
+3. **DO NOT** use the old 20-preset forensic DNA system
+4. **DO NOT** add GPU requirements to Docker
+5. **DO NOT** use complex prompt engineering with negative prompts
+6. **DO NOT** add model download/caching logic
+7. **DO NOT** use xformers or CUDA-specific optimizations
+8. **DO NOT** reference lighting_engine, materiality, hex_palette
+
+## DO (Required)
+
+1. **DO** use Google Gemini API for all AI operations
+2. **DO** keep the glassmorphism design system
+3. **DO** keep Framer Motion animations (SplitView, etc.)
+4. **DO** use simple natural language prompts
+5. **DO** keep the app lightweight and fast
+6. **DO** handle API errors gracefully
+7. **DO** use environment variables for API keys
+8. **DO** maintain the existing file upload flow
+
+---
+
+## FastAPI Best Practices
+
+### Lifespan Management
+```python
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup - initialize Gemini client
+    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+    yield
+    # Shutdown - cleanup if needed
+
+app = FastAPI(lifespan=lifespan)
+```
+
+### Error Handling
+- Use specific HTTP status codes (400, 422, 500, 503)
+- Include descriptive error messages in HTTPException detail
+- Log errors with `exc_info=True`
+- Validate input before processing
+
+### Image Processing
+```python
+# ALWAYS seek(0) after creating BytesIO
+image_buffer = io.BytesIO(decoded_bytes)
+image_buffer.seek(0)
+
+# ALWAYS verify images before processing
+image = Image.open(image_buffer)
+image.verify()
+image_buffer.seek(0)
+image = Image.open(image_buffer)
+```
+
+---
+
+## Gemini API Quick Reference
+
+```python
+import google.generativeai as genai
+
+# Initialize
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+# Image Generation (Imagen 3)
+imagen = genai.ImageGenerationModel("imagen-3.0-generate-001")
+result = imagen.generate_images(
+    prompt="Modern architectural visualization...",
+    number_of_images=1,
+    aspect_ratio="1:1"
+)
+
+# Vision Analysis (Gemini 2.0)
+model = genai.GenerativeModel("gemini-2.0-flash-exp")
+response = model.generate_content([
+    "Analyze this floor plan and describe the layout...",
+    {"mime_type": "image/png", "data": image_bytes}
+])
+```
+
+---
+
+## File Structure
+
+```
+MQT/
+├── main.py              # FastAPI backend (REWRITE)
+├── config.py            # Configuration (MODIFY)
+├── Dockerfile           # Container (SIMPLIFY)
+├── requirements.txt     # Python deps (MODIFY)
+├── package.json         # Node deps (KEEP)
+├── vite.config.js       # Build config (KEEP)
+├── .env.example         # Environment template (UPDATE)
+├── docs/
+│   ├── REMODEL_PLAN.md  # Migration plan
+│   └── PRD.md           # Product requirements
+├── .taskmaster/
+│   └── tasks.json       # Task breakdown
+├── src/
+│   ├── App.jsx          # Main app (MODIFY)
+│   ├── main.jsx         # Entry (KEEP)
+│   ├── index.css        # Styles (KEEP)
+│   ├── components/
+│   │   ├── Layout.jsx   # Header (KEEP)
+│   │   ├── Hero.jsx     # Landing (KEEP)
+│   │   ├── Uploader.jsx # Upload (KEEP)
+│   │   ├── Controls.jsx # Styles (REWRITE)
+│   │   ├── SplitView.jsx # Compare (KEEP)
+│   │   ├── PromptInput.jsx   # NEW
+│   │   ├── StyleChips.jsx    # NEW
+│   │   └── LoadingOverlay.jsx # NEW
+│   ├── services/
+│   │   └── api.js       # API client (SIMPLIFY)
+│   └── data/            # DELETE style_prompts.json
+└── dist/                # Built frontend
+```
+
+---
+
+## Quick Commands
+
+```bash
+# Frontend development
+npm run dev
+
+# Backend development
+uvicorn main:app --reload --port 8080
+
+# Install Python deps
+pip install -r requirements.txt
+
+# Build for production
+npm run build
+docker build -t mqt-gemini .
+
+# Test health endpoint
+curl http://localhost:8080/health
+```
+
+---
+
+## Cloud Run Deployment
+
+```bash
+# Deploy (simpler with Gemini - no GPU needed)
+gcloud run deploy mqt-app \
+  --memory 1Gi \           # Reduced from 8Gi (no models)
+  --cpu 1 \                # Reduced from 4 (API calls only)
+  --timeout 60 \           # Reduced from 600 (fast API)
+  --concurrency 10 \       # Increased (no GPU bottleneck)
+  --max-instances 10 \
+  --set-env-vars GEMINI_API_KEY=your_key
+```
+
+---
+
+## Logging Standards
+```python
+import logging
+
+logger = logging.getLogger("mqt-backend")
+
+# Info for normal operations
+logger.info(f"Generating with prompt: {prompt[:50]}...")
+
+# Error with stack trace
+logger.error(f"Generation error: {e}", exc_info=True)
+```
+
+---
+
+Last Updated: December 10, 2025
+Status: REMODEL IN PROGRESS

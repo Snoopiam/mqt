@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
-const Hero = ({ onStart }) => {
+const Hero = ({ onStart, onOpenPlayground, onOpenDesignSystem }) => {
     return (
         <div style={{
             height: '100vh',
@@ -109,6 +109,56 @@ const Hero = ({ onStart }) => {
                     Start Creating
                     <ArrowRight size={20} />
                 </button>
+
+                <div style={{ marginTop: '20px', display: 'flex', gap: '16px' }}>
+                     <button
+                        onClick={onOpenPlayground}
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            color: 'var(--text-secondary)',
+                            padding: '10px 20px',
+                            borderRadius: '30px',
+                            fontSize: '0.9rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'white';
+                            e.currentTarget.style.color = 'white';
+                        }}
+                        onMouseLeave={(e) => {
+                             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+                             e.currentTarget.style.color = 'var(--text-secondary)';
+                        }}
+                     >
+                        🎨 Style Cards
+                     </button>
+                     <button
+                        onClick={onOpenDesignSystem}
+                        style={{
+                            background: 'rgba(255, 77, 0, 0.1)',
+                            border: '1px solid rgba(255, 77, 0, 0.3)',
+                            color: '#ff4d00',
+                            padding: '10px 20px',
+                            borderRadius: '30px',
+                            fontSize: '0.9rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            display: 'flex', alignItems: 'center', gap: '6px'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(255, 77, 0, 0.2)';
+                            e.currentTarget.style.borderColor = '#ff4d00';
+                        }}
+                        onMouseLeave={(e) => {
+                             e.currentTarget.style.background = 'rgba(255, 77, 0, 0.1)';
+                             e.currentTarget.style.borderColor = 'rgba(255, 77, 0, 0.3)';
+                        }}
+                     >
+                        🧬 Style DNA Laboratory
+                     </button>
+                </div>
             </div>
 
             {/* Footer Branding */}

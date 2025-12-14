@@ -93,68 +93,83 @@ const SplitView = ({ beforeImage, afterImage }) => {
                 userSelect: 'none'
             }}
         >
-            {/* Renders layers with Masking */}
+            {/* Layer 1: Original Image (Full View) */}
             <div style={{
                 position: 'absolute', inset: 0,
-                transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
-                transformOrigin: 'center',
-                transition: isDraggingPan.current ? 'none' : 'transform 0.1s ease-out',
-                willChange: 'transform'
+                overflow: 'hidden',
+                pointerEvents: 'none'
             }}>
-                {/* Before Image (Background) */}
-                <img
-                    src={beforeImage}
-                    alt="Original"
-                    style={{
-                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                        objectFit: 'contain',
-                        pointerEvents: 'none'
-                    }}
-                />
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
+                    transformOrigin: 'center',
+                    transition: isDraggingPan.current ? 'none' : 'transform 0.1s ease-out',
+                    willChange: 'transform',
+                    width: '100%', height: '100%'
+                }}>
+                    <img
+                        src={beforeImage}
+                        alt="Original"
+                        style={{
+                            width: '100%', height: '100%',
+                            objectFit: 'contain'
+                        }}
+                    />
+                </div>
+            </div>
 
-                {/* After Image (Foreground, Masked) */}
-                <motion.div
-                    style={{
-                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                        clipPath: useTransform(x, value => `inset(0 ${100 - value}% 0 0)`), // Motion value drives clip
-                    }}
-                >
+            {/* Layer 2: Generated Image (Clipped by Slider) */}
+            <motion.div style={{
+                position: 'absolute', inset: 0,
+                overflow: 'hidden',
+                pointerEvents: 'none',
+                clipPath: useTransform(x, value => `inset(0 ${100 - value}% 0 0)`) // Container clip
+            }}>
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
+                    transformOrigin: 'center',
+                    transition: isDraggingPan.current ? 'none' : 'transform 0.1s ease-out',
+                    willChange: 'transform',
+                    width: '100%', height: '100%'
+                }}>
                     <img
                         src={afterImage}
                         alt="Render"
                         style={{
                             width: '100%', height: '100%',
-                            objectFit: 'contain',
-                            pointerEvents: 'none'
+                            objectFit: 'contain'
                         }}
                     />
-                </motion.div>
-            </div>
+                </div>
+            </motion.div>
 
-            {/* Drag Handle (Driven by Spring) */}
+            {/* Drag Handle (Visuals) */}
             <motion.div
                 style={{
                     position: 'absolute',
                     top: 0, bottom: 0,
-                    left: useTransform(x, value => `${value}%`), // Spring drives position
+                    left: useTransform(x, value => `${value}%`),
                     width: '4px',
-                    background: 'rgba(255, 77, 0, 0.8)',
+                    background: 'var(--brand-orange)',
+                    borderLeft: '1px solid rgba(255,255,255,0.5)', // Contrast boost
+                    borderRight: '1px solid rgba(255,255,255,0.5)', // Contrast boost
                     cursor: 'ew-resize',
                     zIndex: 20,
-                    boxShadow: '0 0 10px rgba(255, 77, 0, 0.5)'
+                    boxShadow: '0 0 15px rgba(0,0,0,0.5)' // Stronger shadow
                 }}
                 onMouseDown={(e) => { e.stopPropagation(); handleMouseDown(e); }}
             >
                 <div style={{
                     position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                    width: '32px', height: '32px',
+                    width: '36px', height: '36px',
                     backgroundColor: 'white',
                     borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                    border: '2px solid rgba(255, 77, 0, 0.8)'
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                    border: '3px solid var(--brand-orange)'
                 }}>
-                    <Move size={16} color="#FF4D00" />
+                    <Move size={18} color="#FF4D00" />
                 </div>
             </motion.div>
 
@@ -163,11 +178,21 @@ const SplitView = ({ beforeImage, afterImage }) => {
                 position: 'absolute', bottom: '24px', right: '24px',
                 display: 'flex', gap: '8px', zIndex: 30
             }}>
-                <div className="glass-card" style={{ padding: '8px 12px', borderRadius: '8px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    gap: '12px',
+                    alignItems: 'center',
+                    background: 'rgba(0, 0, 0, 0.85)', // High contrast dark background
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                    backdropFilter: 'blur(4px)'
+                }}>
                     <button onClick={() => setScale(s => Math.max(0.1, Math.round((s - 0.1) * 10) / 10))} style={btnStyle}><Minus size={16} /></button>
-                    <span style={{ fontSize: '0.8rem', minWidth: '40px', textAlign: 'center' }}>{Math.round(scale * 100)}%</span>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, minWidth: '40px', textAlign: 'center', color: 'white' }}>{Math.round(scale * 100)}%</span>
                     <button onClick={() => setScale(s => Math.min(5, Math.round((s + 0.1) * 10) / 10))} style={btnStyle}><Plus size={16} /></button>
-                    <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.2)' }} />
+                    <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.3)' }} />
                     <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} style={btnStyle} title="Fit to Screen"><RotateCcw size={16} /></button>
                 </div>
             </div>
@@ -176,7 +201,16 @@ const SplitView = ({ beforeImage, afterImage }) => {
 };
 
 const btnStyle = {
-    background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px'
+    background: 'transparent',
+    border: 'none',
+    color: 'white',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '6px', // Larger hit area
+    borderRadius: '4px',
+    transition: 'background 0.2s',
+    ':hover': { background: 'rgba(255,255,255,0.1)' } // Note: Inline styles don't support pseudo-classes easily in React basic style objects, but we'll keep it simple for now or use a class if needed. For now, just clearer base style.
 };
 
 export default SplitView;

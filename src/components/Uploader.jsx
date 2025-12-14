@@ -107,10 +107,25 @@ const Uploader = ({ onUpload }) => {
                 margin: 0,
                 color: 'var(--text-secondary)',
                 fontSize: '1rem',
-                marginBottom: '1.5rem'
+                marginBottom: '1rem'
             }}>
                 Drag & drop or click to browse
             </p>
+
+            {/* Pro Tip */}
+            <div style={{
+                background: 'rgba(255, 77, 0, 0.1)',
+                border: '1px solid rgba(255, 77, 0, 0.2)',
+                borderRadius: '8px',
+                padding: '8px 12px',
+                marginBottom: '0.5rem',
+                fontSize: '0.85rem',
+                color: 'var(--brand-orange)',
+                display: 'flex', alignItems: 'center', gap: '8px'
+            }}>
+                <span style={{ fontWeight: 600 }}>💡 Tip:</span>
+                For best results, upload <b>SINGLE floor plans</b> only. Avoid multi-story sheets.
+            </div>
 
             <div style={{
                 display: 'flex',

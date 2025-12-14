@@ -1,14 +1,31 @@
-
 // MQT API Service
 // Handles communication with the AI rendering backend
 
+/**
+ * Determine the API base URL based on environment:
+ * - Production (Cloud Run): Use relative URL since frontend is served from same origin
+ * - Development: Use localhost with configurable port
+ */
+function getApiBaseUrl() {
+    // If explicitly set via environment variable, use that
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL;
+    }
+
+    // In production build (served from FastAPI), use relative URL
+    // This works because the frontend is served from the same origin as the API
+    if (import.meta.env.PROD) {
+        return '/api/generate';
+    }
+
+    // In development, use localhost
+    return 'http://localhost:8080/api/generate';
+}
+
 const API_CONFIG = {
-    // Replace with your actual backend URL when ready
-    // e.g. 'https://api.replicate.com/v1/predictions' or your custom python server
-    BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/generate',
+    BASE_URL: getApiBaseUrl(),
     HEADERS: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}` 
     }
 };
 
@@ -18,7 +35,7 @@ const API_CONFIG = {
  * @param {object} forensicData - The style attributes (prompt, hex_palette, etc.)
  * @returns {Promise<string>} - The URL or Base64 of the generated image
  */
-export async function generateRender(imageBase64, forensicData) {
+export async function generateRender(imageBase64, forensicData, tier = null) {
     // console.log('[MQT API] Sending request...', forensicData.title);
 
     // Mock Mode Check
@@ -39,43 +56,43 @@ export async function generateRender(imageBase64, forensicData) {
             headers: API_CONFIG.HEADERS,
             body: JSON.stringify({
                 image: imageBase64,
+                tier: tier, // Pass the tier selection (FREE, PREMIUM, etc.)
 
-                // 1. THE INSTRUCTION (Prompt Engineering)
-                // We combine the extracted 'Style DNA' with strict structural commands.
+                // THE INSTRUCTION: Combine style prompt with quality modifiers
                 prompt: `${forensicData.generated_prompt}, high fidelity 8k render, photorealistic textures, sharp focus, ambient occlusion shadow pass.`,
 
-                // 2. THE RESTRICTION (Negative Prompt)
-                // This strictly forbids the AI from adding elements not in the plan.
-                negative_prompt: "text, watermark, low quality, blurred, distorted walls, messy lines, extra furniture, hallucinated plants, phantom cars, organic shapes not in input",
+                // THE RESTRICTION: Negative prompt to prevent hallucinations
+                negative_prompt: "text, watermark, low quality, blurred, distorted walls, messy lines, extra furniture, hallucinated plants, phantom cars, organic shapes not in input, structural changes, layout modifications",
 
-                // 3. THE ARCHITECT (ControlNet)
-                // This tells backend: "Use MLSD/Canny to Find Lines and LOCK them."
-                controlnet: {
-                    module: "mlsd", // Mobile Line Segment Detection (Best for straight architectural lines)
-                    weight: 1.0,    // 100% adherence to structure
-                    guidance_start: 0.0,
-                    guidance_end: 1.0
-                },
-
-                // 4. THE ARTIST (Style injection details)
-                forensics: {
-                    hex_palette: forensicData.hex_palette,
-                    engine: forensicData.lighting_engine,
-                    materiality: forensicData.materiality
-                }
+                // Style preset ID for backend style lookup
+                style_id: forensicData.id
             })
         });
 
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            // Try to get detailed error message from response
+            let errorDetail = response.statusText;
+            try {
+                const errorData = await response.json();
+                errorDetail = errorData.detail || errorData.message || errorDetail;
+            } catch {
+                // Response wasn't JSON, use status text
+            }
+            throw new Error(`API Error (${response.status}): ${errorDetail}`);
         }
 
         const data = await response.json();
-        // Assuming backend returns { output_url: "..." } or { image: "base64..." }
+
+        // Check for success status in response
+        if (data.status === 'success' && data.image) {
+            return data.image;
+        }
+
+        // Fallback for different response formats
         return data.output_url || data.image;
 
     } catch (error) {
-        // console.error('[MQT API] Generation failed:', error);
+        console.error('[MQT API] Generation failed:', error);
         throw error;
     }
 }

@@ -1,7 +1,8 @@
 {
-  "jamsheerjemshi_1765129752950.jpg": {
-    "id": "jamsheerjemshi_1765129752950",
-    "title": "Midnight Azure",
+  "azure_sketch": {
+    "title": "Azure Sketch",
+    "category": "Standard Collection",
+    "description": "Soft isometric sketch with cool blue-grey tones.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "Corona Render",
     "lighting_style": "Soft Area Lighting",
@@ -13,12 +14,12 @@
       "#73889e",
       "#949294"
     ],
-    "filename": "jamsheerjemshi_1765129752950.jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of Corona Render, Soft Area Lighting, Architectural Sketch, color palette: #2e2f33, #64707b, #adb9b8, #73889e, #949294"
   },
-  "jamsheerjemshi_1765129771120.jpg": {
-    "id": "jamsheerjemshi_1765129771120",
-    "title": "Ink Sketch",
+  "crimson_ink": {
+    "title": "Crimson Ink",
+    "category": "Standard Collection",
+    "description": "High-contrast ink style with deep red and neon accents.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "Octane Render",
     "lighting_style": "Global Illumination",
@@ -30,12 +31,12 @@
       "#938d89",
       "#90848c"
     ],
-    "filename": "jamsheerjemshi_1765129771120.jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Global Illumination, Neon Glow, color palette: #341414, #ede2e2, #764343, #938d89, #90848c"
   },
-  "jamsheerjemshi_1765129779669.jpg": {
-    "id": "jamsheerjemshi_1765129779669",
-    "title": "Burgundy Draft",
+  "golden_dark": {
+    "title": "Golden Dark",
+    "category": "Standard Collection",
+    "description": "Rich, dark atmosphere with golden highlights and PBR materials.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "V-Ray 6",
     "lighting_style": "Global Illumination",
@@ -47,12 +48,12 @@
       "#889fa1",
       "#82939c"
     ],
-    "filename": "jamsheerjemshi_1765129779669.jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of V-Ray 6, Global Illumination, PBR Materials, color palette: #1e2d2f, #cd9631, #69766e, #889fa1, #82939c"
   },
-  "keisharizkyp_1765129760908.jpg": {
-    "id": "keisharizkyp_1765129760908",
-    "title": "Warm Realistic",
+  "warm_clay": {
+    "title": "Warm Clay",
+    "category": "Standard Collection",
+    "description": "Matte finish with warm, earthy lighting for a natural feel.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "Octane Render",
     "lighting_style": "Cinematic Lighting",
@@ -64,12 +65,12 @@
       "#898894",
       "#8b9493"
     ],
-    "filename": "keisharizkyp_1765129760908.jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Cinematic Lighting, Matte Finish, color palette: #262323, #bd7858, #73382e, #898894, #8b9493"
   },
-  "ltavzarashvili_1764873436680.jpg": {
-    "id": "ltavzarashvili_1764873436680",
-    "title": "Emerald Eco",
+  "amber_glow": {
+    "title": "Amber Glow",
+    "category": "Standard Collection",
+    "description": "Dark ambiance illuminated by vibrant amber neon edges.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "Octane Render",
     "lighting_style": "Ambient Occlusion",
@@ -81,12 +82,12 @@
       "#84756d",
       "#6a666e"
     ],
-    "filename": "ltavzarashvili_1764873436680.jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Ambient Occlusion, Neon Glow, color palette: #27262d, #cf7b37, #685248, #84756d, #6a666e"
   },
-  "marinairon_1764870783845 (2).jpg": {
-    "id": "marinairon_1764870783845 (2)",
-    "title": "Teal Blueprint",
+  "slate_draft": {
+    "title": "Slate Draft",
+    "category": "Standard Collection",
+    "description": "Professional planometric sketch in neutral slate and beige.",
     "viewpoint": "Planometric View",
     "lighting_engine": "Octane Render",
     "lighting_style": "Soft Area Lighting",
@@ -98,12 +99,12 @@
       "#939c97",
       "#94949c"
     ],
-    "filename": "marinairon_1764870783845 (2).jpg",
     "generated_prompt": "Architectural floor plan, Planometric View, style of Octane Render, Soft Area Lighting, Architectural Sketch, color palette: #323232, #bdb6af, #7f7a75, #939c97, #94949c"
   },
-  "miteaalexandru5_1764873476832 (2).jpg": {
-    "id": "miteaalexandru5_1764873476832 (2)",
-    "title": "Crimson 3D",
+  "urban_depth": {
+    "title": "Urban Depth",
+    "category": "Standard Collection",
+    "description": "Top-down view with realistic textures and deep ambient shadows.",
     "viewpoint": "Top-Down Orthographic",
     "lighting_engine": "Octane Render",
     "lighting_style": "Ambient Occlusion",
@@ -115,12 +116,12 @@
       "#8c949c",
       "#878c9c"
     ],
-    "filename": "miteaalexandru5_1764873476832 (2).jpg",
     "generated_prompt": "Architectural floor plan, Top-Down Orthographic, style of Octane Render, Ambient Occlusion, PBR Materials, color palette: #292d34, #ac937c, #5b616e, #8c949c, #878c9c"
   },
-  "miteaalexandru5_1764873476832.png": {
-    "id": "miteaalexandru5_1764873476832",
-    "title": "Modern Chic",
+  "soft_taupe": {
+    "title": "Soft Taupe",
+    "category": "Standard Collection",
+    "description": "Clean, modern isometric aesthetic with soft lighting and taupe tones.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "Octane Render",
     "lighting_style": "Soft Area Lighting",
@@ -132,12 +133,12 @@
       "#b89f83",
       "#c4bfb8"
     ],
-    "filename": "miteaalexandru5_1764873476832.png",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of Octane Render, Soft Area Lighting, Matte Finish, color palette: #282d34, #967960, #5a616e, #b89f83, #c4bfb8"
   },
-  "rk1772252944_1764870841949.jpg": {
-    "id": "rk1772252944_1764870841949",
-    "title": "Obsidian & Orange",
+  "steel_gloss": {
+    "title": "Steel Gloss",
+    "category": "Standard Collection",
+    "description": "Reflective surfaces in a cool blue and steel grey palette.",
     "viewpoint": "Planometric View",
     "lighting_engine": "Octane Render",
     "lighting_style": "Global Illumination",
@@ -149,12 +150,12 @@
       "#4b697e",
       "#929396"
     ],
-    "filename": "rk1772252944_1764870841949.jpg",
     "generated_prompt": "Architectural floor plan, Planometric View, style of Octane Render, Global Illumination, Glossy Reflections, color palette: #1a2a34, #afc0ca, #638fae, #4b697e, #929396"
   },
-  "rk1772252944_1765129791281.jpg": {
-    "id": "rk1772252944_1765129791281",
-    "title": "Gilded Noir",
+  "teal_cinematic": {
+    "title": "Teal Cinematic",
+    "category": "Standard Collection",
+    "description": "Moody cinematic lighting with rich teal and dark PBR textures.",
     "viewpoint": "Planometric View",
     "lighting_engine": "Unreal Engine 5",
     "lighting_style": "Cinematic Lighting",
@@ -166,12 +167,12 @@
       "#768989",
       "#638b94"
     ],
-    "filename": "rk1772252944_1765129791281.jpg",
     "generated_prompt": "Architectural floor plan, Planometric View, style of Unreal Engine 5, Cinematic Lighting, PBR Materials, color palette: #0c2e2f, #88a8a8, #2b6e6e, #768989, #638b94"
   },
-  "sthaayidesigns_1764870792963 (2).jpg": {
-    "id": "sthaayidesigns_1764870792963 (2)",
-    "title": "Nordic Light",
+  "olive_sketch": {
+    "title": "Olive Sketch",
+    "category": "Standard Collection",
+    "description": "Organic architectural sketch style using olive and muted greens.",
     "viewpoint": "Planometric View",
     "lighting_engine": "Unreal Engine 5",
     "lighting_style": "Ambient Occlusion",
@@ -183,12 +184,12 @@
       "#8b9c97",
       "#8c909c"
     ],
-    "filename": "sthaayidesigns_1764870792963 (2).jpg",
     "generated_prompt": "Architectural floor plan, Planometric View, style of Unreal Engine 5, Ambient Occlusion, Architectural Sketch, color palette: #2a3432, #bfbe78, #687570, #8b9c97, #8c909c"
   },
-  "sthaayidesigns_1764870792963.jpg": {
-    "id": "sthaayidesigns_1764870792963",
-    "title": "Architectural Planometric",
+  "olive_plan": {
+    "title": "Olive Plan",
+    "category": "Standard Collection",
+    "description": "Precision planometric view matching the Olive Sketch aesthetic.",
     "viewpoint": "Planometric View",
     "lighting_engine": "Octane Render",
     "lighting_style": "Ray-Traced Shadows",
@@ -200,12 +201,12 @@
       "#8b9c97",
       "#8c909c"
     ],
-    "filename": "sthaayidesigns_1764870792963.jpg",
     "generated_prompt": "Architectural floor plan, Planometric View, style of Octane Render, Ray-Traced Shadows, Architectural Sketch, color palette: #2a3432, #bfbe78, #687570, #8b9c97, #8c909c"
   },
-  "sthaayidesigns_1764870808400 (2).jpg": {
-    "id": "sthaayidesigns_1764870808400 (2)",
-    "title": "Architectural Isometric",
+  "graphite_iso": {
+    "title": "Graphite Iso",
+    "category": "Standard Collection",
+    "description": "Monochrome isometric sketch with sharp, ray-traced shadows.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "V-Ray 6",
     "lighting_style": "Ray-Traced Shadows",
@@ -217,12 +218,12 @@
       "#9b9c99",
       "#93939c"
     ],
-    "filename": "sthaayidesigns_1764870808400 (2).jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of V-Ray 6, Ray-Traced Shadows, Architectural Sketch, color palette: #343639, #d1d0ce, #7c7b7b, #9b9c99, #93939c"
   },
-  "sthaayidesigns_1764870808400.jpg": {
-    "id": "sthaayidesigns_1764870808400",
-    "title": "Unreal Top-Down",
+  "graphite_plan": {
+    "title": "Graphite Plan",
+    "category": "Standard Collection",
+    "description": "Top-down orthographic sketch in a clean grayscale style.",
     "viewpoint": "Top-Down Orthographic",
     "lighting_engine": "Unreal Engine 5",
     "lighting_style": "Ray-Traced Shadows",
@@ -234,12 +235,12 @@
       "#9b9c99",
       "#93939c"
     ],
-    "filename": "sthaayidesigns_1764870808400.jpg",
     "generated_prompt": "Architectural floor plan, Top-Down Orthographic, style of Unreal Engine 5, Ray-Traced Shadows, Architectural Sketch, color palette: #343639, #d1d0ce, #7c7b7b, #9b9c99, #93939c"
   },
-  "sthaayidesigns_1764870820100 (2).jpg": {
-    "id": "sthaayidesigns_1764870820100 (2)",
-    "title": "Neon Isometric",
+  "cyber_blue": {
+    "title": "Cyber Blue",
+    "category": "Standard Collection",
+    "description": "Isometric tech-noir look with cool blue neon elements.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "V-Ray 6",
     "lighting_style": "Ray-Traced Shadows",
@@ -251,12 +252,12 @@
       "#7a889d",
       "#8a9cad"
     ],
-    "filename": "sthaayidesigns_1764870820100 (2).jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of V-Ray 6, Ray-Traced Shadows, Neon Glow, color palette: #2b323b, #656f7e, #b1b5bd, #7a889d, #8a9cad"
   },
-  "sthaayidesigns_1764870820100.jpg": {
-    "id": "sthaayidesigns_1764870820100",
-    "title": "Unreal Top-Down",
+  "cyber_plan": {
+    "title": "Cyber Plan",
+    "category": "Standard Collection",
+    "description": "Top-down view highlighting structure with blue neon glow.",
     "viewpoint": "Top-Down Orthographic",
     "lighting_engine": "Unreal Engine 5",
     "lighting_style": "Ray-Traced Shadows",
@@ -268,12 +269,12 @@
       "#7a889d",
       "#8a9cad"
     ],
-    "filename": "sthaayidesigns_1764870820100.jpg",
     "generated_prompt": "Architectural floor plan, Top-Down Orthographic, style of Unreal Engine 5, Ray-Traced Shadows, Neon Glow, color palette: #2b323b, #656f7e, #b1b5bd, #7a889d, #8a9cad"
   },
-  "sthaayidesigns_1765129798756.jpg": {
-    "id": "sthaayidesigns_1765129798756",
-    "title": "Neon Isometric",
+  "magma_neon": {
+    "title": "Magma Neon",
+    "category": "Standard Collection",
+    "description": "Dramatic isometric view with fiery red neon against dark grey.",
     "viewpoint": "Isometric Projection",
     "lighting_engine": "V-Ray 6",
     "lighting_style": "Ambient Occlusion",
@@ -285,7 +286,209 @@
       "#330f0d",
       "#9d9198"
     ],
-    "filename": "sthaayidesigns_1765129798756.jpg",
     "generated_prompt": "Architectural floor plan, Isometric Projection, style of V-Ray 6, Ambient Occlusion, Neon Glow, color palette: #8b2b1f, #c8bec4, #ce4a36, #330f0d, #9d9198"
+  },
+  "molten_copper": {
+    "title": "Molten Copper",
+    "category": "Signature",
+    "description": "Dark mode 2.5D floor plan with ember gradient walls and white wireframe furniture.",
+    "viewpoint": "Top-Down Orthographic",
+    "lighting_style": "Soft Studio with Directional Shadows",
+    "materiality": "Matte Gradient Walls on Dark Floor",
+    "hex_palette": [
+      "#FF5722",
+      "#C62828",
+      "#1A1A1A",
+      "#FFFFFF"
+    ],
+    "generated_prompt": "CRITICAL VIEWPOINT RULE: ABSOLUTELY STRICT TOP-DOWN ORTHOGRAPHIC VIEW ONLY. Camera angle MUST be exactly 90 degrees straight down, like looking at a blueprint on a table. FORBIDDEN: NO camera tilt, NO isometric angle, NO 3D rotation, NO perspective distortion, NO angled view, NO oblique projection. The floor plan must appear completely flat as if viewed from directly above. Transform into stylized 2.5D floor plan. WALLS: Extruded 3D walls with SMOOTH FLAT MATTE SOLID colors - absolutely NO texture, NO noise, NO metallic effect, NO roughness. Wall TOP SURFACES: vibrant saturated BRIGHT ORANGE (#FF5722). Wall VERTICAL SIDES: solid deep CRIMSON RED (#C62828). Colors must be clean, flat, smooth like painted plastic or vector graphics. FLOOR: Uniform smooth matte dark charcoal (#1A1A1A), no texture. TEXT & FURNITURE: Pure white 2D wireframe line drawings only. SHADOWS: Soft drop shadows toward bottom-right. NO metallic textures, NO copper effect, NO noise - clean smooth matte colors only. REMINDER: Camera MUST remain perfectly vertical - zero tilt, zero rotation, pure top-down view like a satellite photo."
+  },
+  "burgundy_velvet": {
+    "title": "Burgundy Velvet",
+    "category": "Signature",
+    "description": "High-contrast burgundy theme with a deep red gradient background, crisp white walls, and muted reddish-brown furniture.",
+    "hex_palette": [
+      "#5b2223",
+      "#2b1011",
+      "#fffefe",
+      "#6e3e3c",
+      "#fffefa"
+    ],
+    "generated_prompt": "Transform into a high-contrast architectural presentation layout. Background: A deep, rich gradient fading from Muted Burgundy (#5b2223) to Dark Wine (#2b1011). Walls: Clean, solid, bright Off-White (#fffefe) extruded walls that pop against the dark background. Furniture: Stylized 2D wireframe lines in Muted Reddish-Brown (#6e3e3c). Text/Labels: Crisp Off-White (#fffefa). Shadows: Soft ambient occlusion drop shadows to lift the white walls off the red floor. Aesthetic: Modern, sleek, professional dark mode."
+  },
+  "crimson_white_structure": {
+    "title": "Crimson Structure",
+    "category": "Signature",
+    "description": "Dramatic high-contrast 2.5D plan. Deep textured burgundy background with pure white extruded wall tops and wireframe details, casting deep shadows.",
+    "viewpoint": "Strict Top-Down Orthographic",
+    "lighting_engine": "Lumen",
+    "lighting_style": "Dramatic High-Contrast Directional",
+    "materiality": "Textured Burgundy Background + Pure White Matte Extrusions",
+    "hex_palette": [
+      "#330F0F",
+      "#FFFFFF"
+    ],
+    "generated_prompt": "A high-contrast 2.5D physical architectural model visualization. BACKGROUND & UNIFORM FLOOR: A rich, deep, textured burgundy wine color (#330F0F) across the entire canvas, resembling heavy cardstock or velvet paper. THE WALLS: Extruded 3D walls where the TOP HORIZONTAL SURFACE is pure, brilliant matte White (#FFFFFF). The VERTICAL SIDES of the extrusion are the same deep burgundy color as the background, making the white tops appear to rise sharply out of the dark base. DETAILS: All furniture, trees, landscaping, fixtures, and dimension text are rendered as fine, crisp pure White (#FFFFFF) wireframe lines. LIGHTING & SHADOWS: Strong, dramatic directional lighting from the top-left. This casts deep, soft, realistic dark shadows from the white wall tops onto the burgundy background, creating significant physical depth and a 'pop-up book' effect."
+  },
+  "red_velvet_physical": {
+    "title": "Red Velvet",
+    "category": "Signature",
+    "description": "Dramatic monochromatic physical model with deep burgundy background, stark white foam-core walls, and salmon pink wireframe details.",
+    "viewpoint": "Strict Top-Down Orthographic",
+    "lighting_engine": "Lumen",
+    "lighting_style": "Directional Top-Left with Deep Shadows",
+    "materiality": "Textured Matte Paper + Foam-Core Extrusions",
+    "hex_palette": [
+      "#350E0F",
+      "#FFFFFF",
+      "#E08585",
+      "#150000"
+    ],
+    "generated_prompt": "You are an Expert Architectural Technical Artist specializing in 2.5D presentation styles and physical model simulations. Generate an architectural visualization with the 'Red Velvet Physical Model' style. BACKGROUND: Deep Textured Burgundy (#350E0F) with subtle matte paper grain texture across entire canvas. WALLS: Extruded Stark White (#FFFFFF) 'foam-core' style blocks with distinct 2.5D height - the walls must appear as physical white foam board rising from the dark surface. LIGHTING & SHADOWS: Directional top-left lighting creating deep, soft-edged drop shadows (#150000) cast to the bottom-right, emphasizing physical depth and pop-up book effect. FURNITURE & LINEWORK: Delicate, crisp Salmon Pink (#E08585) wireframes for all furniture, fixtures, and text - appearing as laser-etched details on the dark surface. VEGETATION: Stylized translucent wireframe trees in matching light red/salmon tones. AESTHETIC: Dramatic, monochromatic, high-contrast architectural presentation board with a premium physical model feel. Maintain strict top-down orthographic view. Do not alter structural layout - only apply aesthetic rendering."
+  },
+  "maroon_cardstock": {
+    "title": "Deep Maroon",
+    "category": "Signature",
+    "description": "Minimalist moody presentation board with matte burgundy background, floating white walls with ambient occlusion, and muted rose wireframes.",
+    "viewpoint": "Strict Top-Down Orthographic",
+    "lighting_engine": "Lumen",
+    "lighting_style": "Top-Left Ambient Occlusion",
+    "materiality": "Matte Paper Grain + Floating White Block-outs",
+    "hex_palette": [
+      "#2F0A0D",
+      "#FFFFFF",
+      "#CFA4A4"
+    ],
+    "generated_prompt": "Deep Maroon Architectural Cardstock Style. STRICT RULES: Do not deviate from specified Hex codes. Ensure 'floating' depth effect via shadow manipulation. Maintain wireframe purity for non-structural elements. BACKGROUND: Uniform Matte Burgundy (#2F0A0D) with subtle paper grain texture across entire canvas. WALLS: Solid Stark White (#FFFFFF) block-out extrusions with deep, soft Ambient Occlusion shadows from Top-Left Light Source creating a 'floating' layered effect - walls appear to hover above the surface. FURNITURE, CARS & VEGETATION: Ultra-fine, single-weight Wireframe lines in Muted Rose (#CFA4A4) . TEXT: Crisp White (#FFFFFF) Sans-Serif labels, minimal and clean. STYLE: Minimalist, moody, high-contrast premium presentation board aesthetic. Top-down orthographic view only."
+  },
+  "physical_model_blueprint": {
+    "title": "Oak Blueprint",
+    "category": "Signature",
+    "description": "Physical Model Blueprint Hybrid with light oak walls, beige wireframes, and dark slate navy background.",
+    "viewpoint": "Top-down Orthographic (Plan View). No perspective distortion.",
+    "lighting_style": "Global Illumination with directional Key Light from Top-Left, casting soft diffuse shadows to Bottom-Right. Strong Ambient Occlusion where walls meet floor.",
+    "materiality": "Light wood or cardboard walls (matte finish). Furniture lines resemble metallic ink or beige pencil.",
+    "hex_palette": [
+      "#252935",
+      "#C8A684",
+      "#DBCAB0",
+      "#FFFFFF"
+    ],
+    "generated_prompt": "You are an Architectural Technical Artist & Texture Synthesis Specialist. Core Behaviors: Expertise in High-fidelity Style Transfer for architectural deliverables. Goal: Apply the aesthetic of a Reference Visual DNA to a Target Layout without altering the target's geometry. LOCK GEOMETRY: Treat the target image as a HARD STRUCTURAL CONSTRAINT. Do not move walls, change aspect ratios, or rearrange furniture. Apply the following Visual DNA to the target floorplan: Physical Model Blueprint Hybrid. Background: Uniform Matte Dark Slate Navy (#252935) with flat cardstock texture. Walls: Extruded 3D Light Oak (#C8A684) with visible height and soft directional drop shadows (top-left light source). Lines, Furniture & Fixtures: Fine Beige Wireframe (#DBCAB0) 2D vector strokes—strictly non-extruded. Text: Clean Sans-Serif White (#FFFFFF) in all caps. Lighting: Soft global illumination with deep ambient occlusion at wall bases. Style: High-fidelity minimalist architectural mockup combining physical block walls with digital schematic details. Top-down orthographic view only."
+  },
+  "slate_maize": {
+    "title": "Slate Maize",
+    "category": "Signature",
+    "description": "High-contrast dark-mode 2.5D plan with slate-teal background and pale maize-yellow wall tops.",
+    "viewpoint": "Orthographic Top-Down (2D Plan) with 2.5D extrusion elements.",
+    "lighting_style": "Simulated soft global illumination or ambient occlusion to ground the walls. No harsh directional hard shadows.",
+    "materiality": "Matte surfaces. High contrast between the 'Pop' color of the wall tops and the dark base.",
+    "hex_palette": [
+      "#2F3E3F",
+      "#E3DC95",
+      "#1B1B1B",
+      "#FFFFFF"
+    ],
+    "generated_prompt": "Modern 2.5D Architectural Plan. Background: Matte Dark Slate-Teal (#2F3E3F) with subtle vignette. Walls: Extruded Pale Maize-Yellow (#E3DC95) tops with deep slate sides and soft drop shadows. Floors: Deep Charcoal (#1B1B1B) matte finish. Furniture: Minimalist White (#FFFFFF) wireframes and semi-transparent fills. Typography: Clean White (#FFFFFF) Sans-Serif labels. Lighting: Soft top-down directional with ambient occlusion. Style: High-contrast, clean, dark-mode visualization."
+  },
+  "slate_white": {
+    "title": "Slate White",
+    "category": "Signature",
+    "description": "Moody dark-mode visualization with deep slate navy background, floating white walls, and ghost-white wireframes.",
+    "viewpoint": "Strictly Orthographic Top-Down. No perspective convergence on the layout, but shadows imply depth.",
+    "lighting_style": "Simulated Global Illumination with a strong directional key light from the Top-Left. Shadows fall softly to the Bottom-Right, creating the illusion of the walls hovering over the canvas.",
+    "materiality": "Matte white structural blocks with ghost-white wireframe details.",
+    "hex_palette": [
+      "#1B2A38",
+      "#FFFFFF",
+      "#E6E6E6"
+    ],
+    "generated_prompt": "Moody 3D Architectural Floor Plan. Background: Deep Gradient Slate Navy (#1B2A38) fading to Black (#0A0E12) vignette. Walls: Extruded Matte White (#FFFFFF) structural blocks with significant height. Furniture & Fixtures: Delicate, Ghost-White (#E6E6E6) CAD wireframes (no fill). Vegetation: Stylized white ink sketch aesthetic. Shadows: Soft, directional ambient occlusion (#000000 opacity 0.5) falling bottom-right to create 'floating' paper effect. Style: High-contrast, minimalist, elegant 'Dark Mode' architectural visualization."
+  },
+  "crimson_maquette": {
+    "title": "Crimson Maquette",
+    "category": "Signature",
+    "description": "High-impact monochromatic physical model aesthetic with deep crimson cardstock background and cool white architectural blocks.",
+    "viewpoint": "Top-Down Orthographic (Plan View).",
+    "lighting_style": "Simulated soft global illumination. Walls cast realistic, soft-edged shadows onto the floor, creating depth. No specular highlights (matte).",
+    "materiality": "Matte finish throughout. Floor looks like heavy cardstock; walls look like architectural modeling board.",
+    "hex_palette": [
+      "#802020",
+      "#EEEEEE",
+      "#FFFFFF",
+      "#200505"
+    ],
+    "generated_prompt": "High-Impact Monochromatic Architectural Maquette. Background: Deep Matte Crimson (#802020) with subtle fine-grain paper texture. Walls: Extruded 3D Cool White (#EEEEEE) structural blocks with distinct height. Furniture, Fixtures & Text: Ultra-thin, crisp Pure White (#FFFFFF) 2D CAD wireframe drafting lines projected flat onto the floor. Shadows: Soft, realistic directional drop shadows (#200505) cast by walls to the bottom-right. Style: Physical model aesthetic, clean minimalism, high contrast, museum-quality presentation."
+  },
+  "slate_marigold": {
+    "title": "Slate Marigold",
+    "category": "Signature",
+    "description": "Dark-mode technical noir with deep slate teal background and vibrant marigold walls in a paper cut-out aesthetic.",
+    "viewpoint": "Top-down Orthographic with 2.5D elements (extruded walls).",
+    "lighting_style": "Global Illumination with Ambient Occlusion. Shadows are soft and diffused, suggesting a studio light setup from the top-left.",
+    "materiality": "Matte surfaces with paper cut-out wall aesthetic.",
+    "hex_palette": [
+      "#182227",
+      "#F5A623",
+      "#FFFFFF"
+    ],
+    "generated_prompt": "Dark-Mode Architectural Blueprint. Background: Matte Deep Slate Teal (#182227) with subtle vignette. Structure: Extruded Walls in Vibrant Marigold (#F5A623) featuring soft 3D drop shadows and ambient occlusion. Details: Fine White (#FFFFFF) wireframe furniture, fixtures, and sans-serif text. Vegetation: Stylized Wireframe Gold (#E09600) trees. Lighting: Soft Upper-Left Directional source creating depth (#0F1518 shadows). Style: High-contrast, elegant, minimalist technical noir with 'paper cut-out' wall aesthetic."
+  },
+  "night_marigold": {
+    "title": "Night Marigold",
+    "category": "Signature",
+    "description": "Minimalist night-mode aesthetic with deep slate teal background, vibrant marigold walls, and ice white wireframes.",
+    "viewpoint": "Top-down Orthographic with 3D depth cues (pseudo-3D).",
+    "lighting_style": "Soft global illumination with distinct Ambient Occlusion (AO) grounding the raised walls. Shadows cast to the bottom-right.",
+    "materiality": "Walls appear as solid matte plastic/clay. Furniture is rendered as delicate 2D CAD wireframes (schematic style). Vegetation is stylized wireframe mesh.",
+    "hex_palette": [
+      "#1B262C",
+      "#F29F05",
+      "#E0E6ED"
+    ],
+    "generated_prompt": "Modern Dark-Mode Architectural Plan. Background: Smooth Deep Slate Teal (#1B262C) with soft vignette. Walls: Extruded 3D matte finish in Vibrant Marigold (#F29F05), casting soft bottom-right shadows. Furniture & Text: Precision CAD wireframes in Ice White (#E0E6ED). Vegetation: Stylized mesh trees in matching Marigold (#F29F05). Lighting: Global illumination with heavy Ambient Occlusion. Style: Minimalist, high-contrast, night-mode aesthetic."
+  },
+  "petrol_white": {
+    "title": "Petrol White",
+    "category": "Signature",
+    "description": "Atmospheric hybrid aesthetic combining physical foam-core model walls with digital blueprint wireframes on deep petrol blue background.",
+    "viewpoint": "Top-down Orthographic with slight depth perception (3D extrusion visible).",
+    "lighting_style": "Strong Directional Light (Sun) coming from Top-Left. Evidenced by shadows cast to the Bottom-Right. Features soft Ambient Occlusion at wall bases.",
+    "materiality": "Physical Model aesthetic for walls (matte, solid, light-catching). Blueprint aesthetic for interior details (thin vector lines, transparent/wireframe).",
+    "hex_palette": [
+      "#1A2B3C",
+      "#FFFFFF",
+      "#B0C4DE"
+    ],
+    "generated_prompt": "Atmospheric 3D Architectural Model Presentation. Background: Deep Gradient Petrol Blue (#1A2B3C to #0D141A) with smooth vignette. Walls: Extruded Matte White (#FFFFFF) structural blocks with high physical depth. Furniture & Fixtures: Fine Ghost-White (#E0E6EB) wireframe schematic lines overlaying the floor. Vegetation: Stylized white sketch-line trees. Lighting: Dramatic top-left directional light casting soft, elongated deep shadows (#05080C). Style: Hybrid physical foam-core model meets digital blueprint, high contrast, moody, elegant."
+  },
+  "emerald_white": {
+    "title": "Emerald White",
+    "category": "Signature",
+    "description": "Elegant monochromatic hybrid aesthetic with deep emerald teal background, white structural walls, and white gel pen sketch details.",
+    "viewpoint": "Top-down Orthographic Floor Plan.",
+    "lighting_style": "Soft directional light from the top-left, generating realistic ambient occlusion and diffusion shadows towards the bottom-right.",
+    "materiality": "Matte finish on walls. Furniture, plants, and text are depicted as 'White Gel Pen' or 'White Pencil' sketches directly on the teal surface, creating a blueprint/sketch aesthetic.",
+    "hex_palette": [
+      "#10403B",
+      "#FFFFFF",
+      "#F5F5F5"
+    ],
+    "generated_prompt": "Subject: Architectural Physical Model Simulation. Background: Deep Emerald Teal (#10403B) with matte paper texture and vignette. Walls: Extruded Minimalist White (#F5F5F5) with soft drop shadows (#08201D). Furniture & Vegetation: Fine White Wireframe (#FFFFFF) sketches, resembling white ink on dark paper. Lighting: Soft directional top-left source. Style: Elegant, monochromatic, hybrid 3D-structural/2D-sketch aesthetic."
+  },
+  "physical_architectural_model": {
+    "title": "Physical Model (Slate)",
+    "category": "Signature",
+    "description": "Museum-quality physical model aesthetic with matte dark slate grey background, bone white floors, and basswood/oak wall caps.",
+    "viewpoint": "** Top-down 3D Orthographic (Plan View). Not a flat drawing; walls have height.",
+    "lighting_style": "** Heavily relies on Ambient Occlusion (AO). No hard sunlight direction; soft, diffuse shadows ground the furniture to the floor.",
+    "materiality": "** 'Clay' render style for furniture (white, featureless blocks). 'Basswood' or 'Birch Plywood' aesthetic for wall caps. Floors are a uniform matte cream.",
+    "hex_palette": [
+      "#3E444A",
+      "#F0ECE6",
+      "#C5A577",
+      "#FFFFFF"
+    ],
+    "generated_prompt": "Physical Architectural Model Aesthetic. Background: Matte Dark Slate Grey (#3E444A) with uniform coverage. Floors: Smooth Matte Bone White (#F0ECE6) void of grain. Walls: Extruded 3D geometry topped with Light Basswood/Oak Veneer (#C5A577). Furniture: Minimalist 'White Clay' blocks (#FFFFFF) with schematic vector line detailing. Lighting: Soft Global Illumination with deep, diffuse Ambient Occlusion shadows (#1A1A1A). Text: Crisp Technical Sans-Serif Black (#000000). Style: Clean, isometric-like orthographic projection, museum-quality physical model look."
   }
 }

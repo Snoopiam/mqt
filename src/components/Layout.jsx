@@ -19,7 +19,10 @@ const Layout = ({ children }) => {
                 backdropFilter: 'blur(10px)',
                 zIndex: 10
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div 
+                    onClick={() => window.location.href = '/'}
+                    style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}
+                >
                     {/* Logo Mark */}
                     <div style={{
                         width: '40px', height: '40px',
