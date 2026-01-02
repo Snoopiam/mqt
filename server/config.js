@@ -7,23 +7,24 @@
 import dotenv from 'dotenv';
 import { resolve } from 'path';
 import { existsSync } from 'fs';
+import logger from './logger.js';
 
 // Load .env file for local development
 const envPath = resolve(process.cwd(), '.env');
-console.log('[Config] Loading .env from:', envPath);
-console.log('[Config] .env exists:', existsSync(envPath));
+logger.debug('[Config] Loading .env from:', envPath);
+logger.debug('[Config] .env exists:', existsSync(envPath));
 
 const result = dotenv.config();
 if (result.error) {
-  console.error('[Config] Error loading .env:', result.error);
+  logger.error('[Config] Error loading .env:', result.error);
 }
 
-console.log('[Config] GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY);
+logger.debug('[Config] GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY);
 if (process.env.GEMINI_API_KEY) {
-  console.log('[Config] GEMINI_API_KEY length:', process.env.GEMINI_API_KEY.length);
-  console.log('[Config] GEMINI_API_KEY prefix:', process.env.GEMINI_API_KEY.substring(0, 4) + '...');
+  logger.debug('[Config] GEMINI_API_KEY length:', process.env.GEMINI_API_KEY.length);
+  logger.debug('[Config] GEMINI_API_KEY prefix:', process.env.GEMINI_API_KEY.substring(0, 4) + '...');
 } else {
-    console.warn('[Config] GEMINI_API_KEY is MISSING in process.env');
+  logger.warn('[Config] GEMINI_API_KEY is MISSING in process.env');
 }
 
 /**

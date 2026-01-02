@@ -7,6 +7,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import sharp from 'sharp';
 import { Config } from './config.js';
 import { getStylePreset, buildGenerationPrompt, STYLE_CATEGORIES } from './styles.js';
+import logger from './logger.js';
 
 // ============================================
 // CONSTANTS
@@ -82,19 +83,19 @@ let genAI = null;
  */
 export function initializeGemini() {
   if (!Config.GEMINI_API_KEY) {
-    console.error('[Gemini] GEMINI_API_KEY not set in environment!');
+    logger.error('[Gemini] GEMINI_API_KEY not set in environment!');
     return false;
   }
 
   try {
     genAI = new GoogleGenerativeAI(Config.GEMINI_API_KEY);
-    console.log('[Gemini] API configured successfully');
-    console.log(`[Gemini] Model Tier: ${Config.MODEL_TIER}`);
-    console.log(`[Gemini] Analysis Model: ${Config.getAnalysisModel()}`);
-    console.log(`[Gemini] Generation Model: ${Config.getGenerationModel()}`);
+    logger.info('[Gemini] API configured successfully');
+    logger.info(`[Gemini] Model Tier: ${Config.MODEL_TIER}`);
+    logger.debug(`[Gemini] Analysis Model: ${Config.getAnalysisModel()}`);
+    logger.debug(`[Gemini] Generation Model: ${Config.getGenerationModel()}`);
     return true;
   } catch (error) {
-    console.error('[Gemini] Failed to initialize:', error);
+    logger.error('[Gemini] Failed to initialize:', error);
     return false;
   }
 }
@@ -194,7 +195,7 @@ export async function generateWithGemini(floorPlanBuffer, prompt, stylePreset = 
   if (tierOverride && Config.TIERS[tierOverride]) {
       tierConfig = Config.TIERS[tierOverride];
       activeTierName = tierOverride;
-      console.log(`[Gemini] Tier Override Active: ${tierOverride}`);
+      logger.debug(`[Gemini] Tier Override Active: ${tierOverride}`);
   }
 
   try {
@@ -203,7 +204,7 @@ export async function generateWithGemini(floorPlanBuffer, prompt, stylePreset = 
     // but we could also override this if tiers use different analysis models.
     // For safety, let's keep analysis consistent unless specific need.
     const analysisModelName = tierConfig.analysis_model || Config.getAnalysisModel();
-    console.log(`[Gemini] Analyzing floor plan with ${analysisModelName} (${activeTierName})`);
+    logger.debug(`[Gemini] Analyzing floor plan with ${analysisModelName} (${activeTierName})`);
 
     const analysisModel = genAI.getGenerativeModel({ model: analysisModelName });
 
@@ -257,7 +258,7 @@ OUTPUT FORMAT: Provide a structured, factual inventory. This analysis will be us
     ]);
 
     const floorPlanAnalysis = analysisResponse.response.text();
-    console.log(`[Gemini] Floor plan analysis: ${floorPlanAnalysis.slice(0, 200)}...`);
+    logger.debug(`[Gemini] Floor plan analysis: ${floorPlanAnalysis.slice(0, 200)}...`);
 
     // Step 2: Build enhanced prompt
     // Step 2: Build enhanced prompt with PERSONA injection
@@ -411,13 +412,13 @@ Render the visualization maintaining EXACT layout fidelity.
 
     // Step 3: Generate with appropriate model
     const generationModelName = tierConfig.generation_model; // Use the configured tier model
-    console.log(`[Gemini] Generating with ${generationModelName}`);
+    logger.debug(`[Gemini] Generating with ${generationModelName}`);
 
     let generatedImageBuffer;
 
     // Check if using Imagen 3 (PREMIUM tier)
     if (generationModelName.includes('imagen')) {
-      console.log('[Gemini] Using Imagen Strategy (Experimental)');
+      logger.debug('[Gemini] Using Imagen Strategy (Experimental)');
 
       // Note: Imagen 3/4 via Gemini API might use different endpoints.
       // We attempt standard generation, but if it fails, we fall back.
@@ -436,8 +437,8 @@ Render the visualization maintaining EXACT layout fidelity.
           }
         }
       } catch (imagenError) {
-        console.error(`[Gemini] Primary Model (${generationModelName}) failed:`, imagenError.message);
-        console.log('[Gemini] Attempting FALLBACK to standard Gemini Image model...');
+        logger.warn(`[Gemini] Primary Model (${generationModelName}) failed:`, imagenError.message);
+        logger.info('[Gemini] Attempting FALLBACK to standard Gemini Image model...');
         
         // FALLBACK: Use the FREE tier model (Gemini Flash Image)
         const fallbackModelName = Config.TIERS.FREE.generation_model || 'gemini-2.0-flash-exp';
@@ -459,13 +460,13 @@ Render the visualization maintaining EXACT layout fidelity.
                 for (const part of fbResponse.candidates[0].content.parts) {
                     if (part.inlineData) {
                         generatedImageBuffer = Buffer.from(part.inlineData.data, 'base64');
-                        console.log('[Gemini] Fallback generation SUCCESS');
+                        logger.info('[Gemini] Fallback generation SUCCESS');
                         break;
                     }
                 }
             }
         } catch (fbError) {
-            console.error('[Gemini] Fallback also failed:', fbError.message);
+            logger.error('[Gemini] Fallback also failed:', fbError.message);
         }
       }
     }
@@ -505,7 +506,7 @@ Render the visualization maintaining EXACT layout fidelity.
       };
 
       const configForTier = tierGenerationConfig[activeTierName] || tierGenerationConfig.FREE;
-      console.log(`[Gemini] STRICT generation config for ${activeTierName}:`, JSON.stringify(configForTier));
+      logger.debug(`[Gemini] STRICT generation config for ${activeTierName}:`, JSON.stringify(configForTier));
 
       // For gemini-2.0-flash-exp, we need to specify responseModalities to get image output
       const generationModel = genAI.getGenerativeModel({
@@ -564,15 +565,14 @@ FINAL REMINDER: The generated image MUST preserve ALL walls, doors, windows, and
         for (const part of response.candidates[0].content.parts) {
           if (part.inlineData && part.inlineData.data) {
             generatedImageBuffer = Buffer.from(part.inlineData.data, 'base64');
-            console.log('[Gemini] Successfully extracted image from response');
+            logger.debug('[Gemini] Successfully extracted image from response');
             break;
           }
         }
       }
 
       if (!generatedImageBuffer) {
-        console.error(`[Gemini] Model ${generationModelName} did not return image data`);
-        console.log('[Gemini] Response text:', response.text ? response.text().slice(0, 500) : 'No text');
+        logger.error(`[Gemini] Model ${generationModelName} did not return image data`);
         throw new Error(
           `Image generation model ${generationModelName} did not produce image output. ` +
           'This may indicate the model doesn\'t support image generation or API changes.'
@@ -581,7 +581,7 @@ FINAL REMINDER: The generated image MUST preserve ALL walls, doors, windows, and
     }
 
     const duration = Date.now() - startTime;
-    console.log(`[Gemini] Generation complete in ${duration}ms`);
+    logger.info(`[Gemini] Generation complete in ${duration}ms`);
 
     const metadata = {
       processing_time: duration,
@@ -595,7 +595,7 @@ FINAL REMINDER: The generated image MUST preserve ALL walls, doors, windows, and
     return { image: generatedImageBuffer, metadata };
 
   } catch (error) {
-    console.error('[Gemini] Generation error:', error);
+    logger.error('[Gemini] Generation error:', error);
     throw error;
   }
 }
@@ -669,7 +669,7 @@ export async function generateHandler(req) {
   // If this is a refinement attempt, build feedback context for the AI
   let refinementContext = '';
   if (refinement && refinement.attempt > 0) {
-    console.log(`[API] REFINEMENT ATTEMPT #${refinement.attempt} - Adjusting approach`);
+    logger.debug(`[API] REFINEMENT ATTEMPT #${refinement.attempt} - Adjusting approach`);
     refinementContext = `
 ##############################################################
 #  CRITICAL: REFINEMENT ATTEMPT #${refinement.attempt}                        #
@@ -717,10 +717,10 @@ DO NOT simply regenerate the same image. ACTIVELY ADJUST your rendering strategy
     // Prepend refinement context if this is a redo attempt
     if (refinementContext) {
         finalPrompt = `${refinementContext}\n\n${finalPrompt}`;
-        console.log(`[API] Refinement context injected into prompt`);
+        logger.debug(`[API] Refinement context injected into prompt`);
     }
 
-    console.log(`[API] Using style preset: ${style_id}`);
+    logger.debug(`[API] Using style preset: ${style_id}`);
   }
 
   // Generate with Gemini
@@ -898,9 +898,9 @@ OUTPUT FORMAT: JSON ONLY (no markdown, no explanation outside JSON)
             mimeType: refMimeType
           }
         });
-        console.log('[Gemini] Reference image included in comparison');
+        logger.debug('[Gemini] Reference image included in comparison');
       } catch (refError) {
-        console.warn('[Gemini] Failed to process reference image:', refError.message);
+        logger.warn('[Gemini] Failed to process reference image:', refError.message);
       }
     }
 
@@ -917,7 +917,7 @@ OUTPUT FORMAT: JSON ONLY (no markdown, no explanation outside JSON)
     try {
         result = await model.generateContent(contentParts);
     } catch (modelError) {
-        console.warn(`[Gemini] Analysis model ${analysisModelName} failed (${modelError.message}). Retrying with fallback...`);
+        logger.warn(`[Gemini] Analysis model ${analysisModelName} failed (${modelError.message}). Retrying with fallback...`);
         const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
         result = await fallbackModel.generateContent(contentParts);
     }
@@ -926,12 +926,12 @@ OUTPUT FORMAT: JSON ONLY (no markdown, no explanation outside JSON)
     const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
     const parsed = JSON.parse(jsonStr);
-    console.log(`[Gemini] Comparison complete. Score: ${parsed.visualMatchScore}/100 (Tier: ${tier}, Has Reference: ${hasReference})`);
+    logger.info(`[Gemini] Comparison complete. Score: ${parsed.visualMatchScore}/100 (Tier: ${tier}, Has Reference: ${hasReference})`);
 
     return parsed;
 
   } catch (error) {
-    console.error('[Gemini] Comparison failed:', error);
+    logger.error('[Gemini] Comparison failed:', error);
     // Fallback error response
     return {
         visualMatchScore: 0,

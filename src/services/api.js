@@ -40,10 +40,8 @@ export async function generateRender(imageBase64, forensicData, tier = null) {
 
     // Mock Mode Check
     if (import.meta.env.VITE_USE_MOCK === 'true') {
-        console.log('[MQT API] Mock Mode enabled. Simulating generation...');
         return new Promise((resolve) => {
             setTimeout(() => {
-                console.log('[MQT API] Mock generation complete.');
                 // Return the original image as the "generated" result for testing flow
                 resolve(imageBase64);
             }, 2000); // 2 second simulated delay
@@ -92,7 +90,6 @@ export async function generateRender(imageBase64, forensicData, tier = null) {
         return data.output_url || data.image;
 
     } catch (error) {
-        console.error('[MQT API] Generation failed:', error);
         throw error;
     }
 }

@@ -7,6 +7,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import logger from './logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -88,20 +89,20 @@ function loadStyles() {
                 }
             });
         } catch (e) {
-            console.error(`[Styles] Error loading ${filePath}:`, e);
+            logger.error(`[Styles] Error loading ${filePath}:`, e);
         }
     };
 
     // 1. Load Main Styles (Public)
-    console.log(`[Styles] Loading Main styles from ${STYLE_DATA_PATH}...`);
+    logger.debug(`[Styles] Loading Main styles from ${STYLE_DATA_PATH}...`);
     mergeData(STYLE_DATA_PATH, false);
 
     // 2. Load Staging Styles (Hidden)
-    console.log(`[Styles] Loading Staging styles from ${STAGING_DATA_PATH}...`);
+    logger.debug(`[Styles] Loading Staging styles from ${STAGING_DATA_PATH}...`);
     mergeData(STAGING_DATA_PATH, true);
-    
+
     STYLE_CATEGORIES = categories;
-    console.log(`[Styles] Total Loaded: ${Object.keys(STYLE_PRESETS).length}`);
+    logger.info(`[Styles] Total Loaded: ${Object.keys(STYLE_PRESETS).length}`);
 }
 
 // Initial Load
@@ -235,10 +236,10 @@ export function saveStyle(styleData) {
     // Reload runtime memory to reflect changes
     loadStyles();
 
-    console.log(`[Styles] Saved new staging style: ${newId}`);
+    logger.info(`[Styles] Saved new staging style: ${newId}`);
     return { success: true, id: newId };
   } catch (e) {
-    console.error('[Styles] Failed to save style:', e);
+    logger.error('[Styles] Failed to save style:', e);
     return { success: false, error: e.message };
   }
 }

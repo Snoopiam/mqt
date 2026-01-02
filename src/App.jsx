@@ -106,7 +106,6 @@ function App() {
 
       // PRIORITY 1: CUSTOM PROMPT
       if (customPrompt && customPrompt.trim().length > 0) {
-        console.log("Using Custom Prompt:", customPrompt);
         forensicData = {
             id: 'custom_user_prompt',
             name: 'Custom Style',
@@ -159,19 +158,16 @@ function App() {
     try {
         // Handle blob URLs - can't convert directly
         if (imageData.startsWith('blob:')) {
-            console.warn('Cannot convert blob URL to blob directly');
             return null;
         }
 
         // Validate data URI format
         if (!imageData.includes(',')) {
-            console.error('Invalid image data format - missing comma separator');
             return null;
         }
 
         const base64Data = imageData.split(',')[1];
         if (!base64Data) {
-            console.error('Empty base64 data after split');
             return null;
         }
 
@@ -190,15 +186,11 @@ function App() {
         }
         return new Blob(byteArrays, { type: contentType });
     } catch (e) {
-        console.error("Blob conversion failed:", e);
         return null;
     }
   };
 
   const handleDownload = () => {
-    console.log('[Download] Starting download...');
-    console.log('[Download] generatedImage type:', generatedImage ? generatedImage.substring(0, 50) + '...' : 'null');
-
     if (!generatedImage) {
       alert("No image to download!");
       return;
@@ -212,7 +204,6 @@ function App() {
 
     // Validate it's a proper data URI
     if (!generatedImage.startsWith('data:image/')) {
-      console.error('[Download] Invalid format:', generatedImage.substring(0, 100));
       alert("Invalid image format. Please try generating again.");
       return;
     }
@@ -247,7 +238,6 @@ function App() {
     }
 
     const filename = `mqt-render-${sanitizedStyleName}-${timestamp}.${extension}`;
-    console.log('[Download] Filename:', filename, 'MimeType:', mimeType);
 
     try {
         // Method 1: Direct data URI download (most reliable for modern browsers)
@@ -262,19 +252,15 @@ function App() {
         // Use a slight delay to ensure the link is in DOM
         requestAnimationFrame(() => {
             link.click();
-            console.log('[Download] Link clicked');
 
             // Clean up after download starts
             setTimeout(() => {
                 if (link.parentNode) {
                     document.body.removeChild(link);
                 }
-                console.log('[Download] Cleanup complete');
             }, 500);
         });
     } catch (error) {
-        console.error('[Download] Primary method failed:', error);
-
         // Method 2: Blob fallback
         try {
             const blob = base64ToBlob(generatedImage, mimeType);
@@ -287,12 +273,10 @@ function App() {
                 fallbackLink.click();
                 document.body.removeChild(fallbackLink);
                 window.URL.revokeObjectURL(url);
-                console.log('[Download] Blob fallback succeeded');
             } else {
                 throw new Error('Blob conversion returned null');
             }
         } catch (fallbackError) {
-            console.error('[Download] Fallback also failed:', fallbackError);
             alert('Download failed. Try right-clicking the image and selecting "Save image as..."');
         }
     }

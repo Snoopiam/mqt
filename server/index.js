@@ -12,6 +12,7 @@ import { dirname, resolve } from 'path';
 import { existsSync } from 'fs';
 
 import { Config } from './config.js';
+import logger from './logger.js';
 import { 
   initializeGemini, 
   isGeminiReady, 
@@ -129,11 +130,11 @@ app.post('/api/generate', async (req, res) => {
     const result = await generateHandler(req.body);
     res.json(result);
   } catch (error) {
-    console.error('[API] Generation error:', error);
+    logger.error('[API] Generation error:', error);
     if (error.stack) {
-        console.error('[API] Stack trace:', error.stack);
+        logger.debug('[API] Stack trace:', error.stack);
     }
-    
+
     const status = error.status || 500;
     const message = error.message || 'Image generation failed';
     
@@ -191,16 +192,16 @@ app.post('/api/styles/extract', async (req, res) => {
 
   try {
     const { StyleExtractor } = await import('./extractor.js');
-    console.log(`[API] Extracting Visual DNA... (Persona: ${persona_id || 'default'}, Strict: ${strict_mode || false})`);
+    logger.debug(`[API] Extracting Visual DNA... (Persona: ${persona_id || 'default'}, Strict: ${strict_mode || false})`);
     const stylePreset = await StyleExtractor.extractDNA(image, persona_id, strict_mode);
-    console.log(`[API] DNA Extracted: ${stylePreset.name}`);
-    
+    logger.info(`[API] DNA Extracted: ${stylePreset.name}`);
+
     res.json({
       status: 'success',
       style: stylePreset
     });
   } catch (error) {
-    console.error('[API] Extraction error:', error);
+    logger.error('[API] Extraction error:', error);
     res.status(500).json({ status: 'error', detail: error.message });
   }
 });
@@ -214,11 +215,11 @@ app.post('/api/styles/compare', async (req, res) => {
 
   try {
       const { comparePresetVsGenerated } = await import('./gemini.js');
-      console.log(`[API] Running Comparison vs ${preset.name} (Persona: ${persona_id}, Tier: ${tier || 'FREE'}, Has Reference: ${!!referenceImage})`);
+      logger.debug(`[API] Running Comparison vs ${preset.name} (Persona: ${persona_id}, Tier: ${tier || 'FREE'}, Has Reference: ${!!referenceImage})`);
       const result = await comparePresetVsGenerated(preset, generatedImage, referenceImage, persona_id, tier);
       res.json({ status: 'success', comparison: result });
   } catch (error) {
-      console.error('[API] Comparison error:', error);
+      logger.error('[API] Comparison error:', error);
       res.status(500).json({ status: 'error', detail: error.message });
   }
 });
@@ -229,11 +230,11 @@ app.post('/api/styles/compare', async (req, res) => {
 
 async function startServer() {
   // Initialize Gemini API
-  console.log('[Server] Starting MQT Server...');
-  console.log(`[Server] Deployment info:`, Config.getDeploymentInfo());
-  
+  logger.info('[Server] Starting MQT Server...');
+  logger.debug('[Server] Deployment info:', Config.getDeploymentInfo());
+
   if (!initializeGemini()) {
-    console.warn('[Server] Gemini API not initialized - check GEMINI_API_KEY');
+    logger.warn('[Server] Gemini API not initialized - check GEMINI_API_KEY');
   }
 
   const distPath = resolve(rootDir, 'dist');
@@ -241,11 +242,11 @@ async function startServer() {
 
   if (isDev) {
     // Development: Use Vite middleware for HMR
-    console.log('[Server] Development mode - setting up Vite middleware...');
-    
+    logger.info('[Server] Development mode - setting up Vite middleware...');
+
     try {
       const { createServer: createViteServer } = await import('vite');
-      
+
       const vite = await createViteServer({
         server: { middlewareMode: true },
         appType: 'spa',
@@ -255,11 +256,11 @@ async function startServer() {
       // Use Vite's connect instance as middleware
       app.use(vite.middlewares);
 
-      console.log('[Server] Vite middleware configured');
+      logger.debug('[Server] Vite middleware configured');
     } catch (error) {
-      console.error('[Server] Failed to setup Vite middleware:', error);
-      console.log('[Server] Falling back to static file serving...');
-      
+      logger.error('[Server] Failed to setup Vite middleware:', error);
+      logger.info('[Server] Falling back to static file serving...');
+
       // Fallback to serving from src if dist doesn't exist
       if (existsSync(distPath)) {
         app.use(express.static(distPath));
@@ -272,11 +273,11 @@ async function startServer() {
     }
   } else {
     // Production: Serve static files from dist/
-    console.log('[Server] Production mode - serving static files from dist/');
-    
+    logger.info('[Server] Production mode - serving static files from dist/');
+
     if (existsSync(distPath)) {
       app.use(express.static(distPath));
-      
+
       // SPA fallback - serve index.html for non-API routes
       app.get('*', (req, res) => {
         if (!req.path.startsWith('/api') && !req.path.startsWith('/health')) {
@@ -284,31 +285,31 @@ async function startServer() {
         }
       });
     } else {
-      console.warn(`[Server] dist/ directory not found at ${distPath}`);
-      console.warn('[Server] Run "npm run build" to build the frontend');
+      logger.warn(`[Server] dist/ directory not found at ${distPath}`);
+      logger.warn('[Server] Run "npm run build" to build the frontend');
     }
   }
 
   // Start listening
   app.listen(Config.PORT, () => {
-    console.log('');
-    console.log('='.repeat(50));
-    console.log(`🚀 MQT Server running on http://localhost:${Config.PORT}`);
-    console.log('='.repeat(50));
-    console.log(`   Mode: ${isDev ? 'Development (HMR enabled)' : 'Production'}`);
-    console.log(`   Gemini: ${isGeminiReady() ? '✅ Ready' : '❌ Not configured'}`);
-    console.log(`   Tier: ${Config.MODEL_TIER}`);
+    logger.info('');
+    logger.info('='.repeat(50));
+    logger.info(`MQT Server running on http://localhost:${Config.PORT}`);
+    logger.info('='.repeat(50));
+    logger.info(`   Mode: ${isDev ? 'Development (HMR enabled)' : 'Production'}`);
+    logger.info(`   Gemini: ${isGeminiReady() ? 'Ready' : 'Not configured'}`);
+    logger.info(`   Tier: ${Config.MODEL_TIER}`);
     if (Config.MODEL_TIER === 'FREE') {
-      console.log(`   Remaining: ${usageTracker.getRemaining()}/100 generations today`);
+      logger.info(`   Remaining: ${usageTracker.getRemaining()}/100 generations today`);
     }
-    console.log('='.repeat(50));
-    console.log('');
+    logger.info('='.repeat(50));
+    logger.info('');
   });
 }
 
 // Start the server
 startServer().catch((error) => {
-  console.error('[Server] Failed to start:', error);
+  logger.error('[Server] Failed to start:', error);
   process.exit(1);
 });
 

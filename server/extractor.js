@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Config } from './config.js';
+import logger from './logger.js';
 
 // Initialize Gemini for Vision
 // Use the ABSOLUTE MOST CAPABLE model for DNA extraction
@@ -101,7 +102,7 @@ export const StyleExtractor = {
       return styleData;
 
     } catch (error) {
-      console.error('[StyleExtractor] Extraction Failed:', error);
+      logger.error('[StyleExtractor] Extraction Failed:', error);
       throw new Error('Failed to extract visual DNA: ' + error.message);
     }
   }
