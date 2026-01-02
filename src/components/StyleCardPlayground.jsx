@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as AnimatedElement, AnimatePresence } from 'framer-motion';
 import { 
     Layers, Zap, ArrowLeft, Loader2, Sparkles, Box, 
     Droplets, ChevronDown, Eye, Settings, Type, Palette, 
@@ -264,7 +264,7 @@ const AccordionSection = ({ title, subtitle, icon, color, isOpen, onClick, child
         />
         <AnimatePresence>
             {isOpen && (
-                <motion.div
+                <AnimatedElement.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -272,7 +272,7 @@ const AccordionSection = ({ title, subtitle, icon, color, isOpen, onClick, child
                     style={{ overflow: 'hidden', margin: '0 -4px', padding: '0 4px' }} // Compensate for padding to prevent clip
                 >
                     {children}
-                </motion.div>
+                </AnimatedElement.div>
             )}
         </AnimatePresence>
     </div>
@@ -280,7 +280,7 @@ const AccordionSection = ({ title, subtitle, icon, color, isOpen, onClick, child
 
 // --- NEW HERO CARD COMPONENT ---
 const NeonHeroCard = ({ title, subtitle, icon: Icon, onClick, color, isCompact }) => (
-    <motion.div
+    <AnimatedElement.div
         onClick={onClick}
         whileHover={{ scale: 1.02, borderColor: color }}
         animate={{ 
@@ -311,7 +311,7 @@ const NeonHeroCard = ({ title, subtitle, icon: Icon, onClick, color, isCompact }
         <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: `radial-gradient(circle, ${color}10, transparent 70%)`, pointerEvents: 'none' }} />
         
         {/* Active Indicator (Chevron?) optional */}
-    </motion.div>
+    </AnimatedElement.div>
 );
 
 // --- Helper Components ---
@@ -355,7 +355,7 @@ const NeonCard = ({ data, theme, isActive, isLoading, onClick, isSignature, icon
     const activeColor = customColor || theme.color.primary;
 
     return (
-        <motion.div
+        <AnimatedElement.div
             onClick={onClick}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
@@ -396,7 +396,7 @@ const NeonCard = ({ data, theme, isActive, isLoading, onClick, isSignature, icon
 
                 <AnimatePresence>
                     {(isHovered || isActive) && (
-                        <motion.div
+                        <AnimatedElement.div
                             initial={{ height: 0, opacity: 0, marginTop: 0 }}
                             animate={{ height: 'auto', opacity: 1, marginTop: 8 }}
                             exit={{ height: 0, opacity: 0, marginTop: 0 }}
@@ -411,7 +411,7 @@ const NeonCard = ({ data, theme, isActive, isLoading, onClick, isSignature, icon
                                 </div>
                             )}
                             {data.description}
-                        </motion.div>
+                        </AnimatedElement.div>
                     )}
                 </AnimatePresence>
             </div>
@@ -425,21 +425,21 @@ const NeonCard = ({ data, theme, isActive, isLoading, onClick, isSignature, icon
             
             {/* Active Border Gradient line */}
             {isActive && (
-                 <motion.div 
+                 <AnimatedElement.div 
                     layoutId="activeBorder"
                     style={{ position: 'absolute', inset: 0, border: `1px solid ${activeColor}`, borderRadius: '16px', opacity: 0.5, pointerEvents: 'none' }}
                  />
             )}
 
             {isLoading && <LoadingBar color={activeColor} />}
-        </motion.div>
+        </AnimatedElement.div>
     );
 };
 
 // 2. Minimal Card (Redesigned: "Swiss Print")
 const MinimalCard = ({ data, theme, isActive, isLoading, onClick, isSignature }) => {
     return (
-        <motion.div
+        <AnimatedElement.div
             onClick={onClick}
             whileHover={{ x: 4 }}
             animate={{ 
@@ -466,7 +466,7 @@ const MinimalCard = ({ data, theme, isActive, isLoading, onClick, isSignature })
                         textTransform: 'none', letterSpacing: '-0.5px'
                     }}>{data.title}</h3>
                      {isActive && (
-                        <motion.div 
+                        <AnimatedElement.div 
                             initial={{ opacity: 0, y: 5 }}
                             animate={{ opacity: 1, y: 0 }}
                             style={{ 
@@ -475,7 +475,7 @@ const MinimalCard = ({ data, theme, isActive, isLoading, onClick, isSignature })
                             }}
                         >
                             {data.description}
-                        </motion.div>
+                        </AnimatedElement.div>
                      )}
                 </div>
                 <div style={{ // Swiss dot
@@ -484,7 +484,7 @@ const MinimalCard = ({ data, theme, isActive, isLoading, onClick, isSignature })
                 }} />
             </div>
              {isLoading && <LoadingBar color="black" />}
-        </motion.div>
+        </AnimatedElement.div>
     );
 };
 
@@ -493,7 +493,7 @@ const Interactive3DCard = ({ data, theme, isActive, isLoading, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
     
     return (
-        <motion.div
+        <AnimatedElement.div
             onClick={onClick}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
@@ -505,7 +505,7 @@ const Interactive3DCard = ({ data, theme, isActive, isLoading, onClick }) => {
                 marginBottom: '4px' // Spacing for 3D depth
             }}
         >
-            <motion.div
+            <AnimatedElement.div
                 variants={{
                     idle: { y: 0, scale: 1, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -1px rgba(0,0,0,0.3)' },
                     hover: { y: -2, scale: 1.01, boxShadow: '0 10px 15px -3px rgba(0,0,0,0.6), 0 4px 6px -2px rgba(0,0,0,0.4)' },
@@ -522,7 +522,7 @@ const Interactive3DCard = ({ data, theme, isActive, isLoading, onClick }) => {
                 }}
             >
                 {/* Sheen Effect */}
-                <motion.div
+                <AnimatedElement.div
                     variants={{
                         idle: { opacity: 0, x: '-100%' },
                         hover: { opacity: 0.1, x: '100%', transition: { duration: 1.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1 } },
@@ -555,7 +555,7 @@ const Interactive3DCard = ({ data, theme, isActive, isLoading, onClick }) => {
 
                     <AnimatePresence>
                         {(isHovered || isActive) && (
-                            <motion.div
+                            <AnimatedElement.div
                                 initial={{ height: 0, opacity: 0, marginTop: 0 }}
                                 animate={{ height: 'auto', opacity: 1, marginTop: 8 }}
                                 exit={{ height: 0, opacity: 0, marginTop: 0 }}
@@ -577,7 +577,7 @@ const Interactive3DCard = ({ data, theme, isActive, isLoading, onClick }) => {
                                         <Layers size={10} /> {data.lighting_engine}
                                     </div>
                                 )}
-                            </motion.div>
+                            </AnimatedElement.div>
                         )}
                     </AnimatePresence>
                 </div>
@@ -590,16 +590,16 @@ const Interactive3DCard = ({ data, theme, isActive, isLoading, onClick }) => {
                     transition: 'background 0.3s'
                 }} />
 
-            </motion.div>
+            </AnimatedElement.div>
             {isLoading && <LoadingBar color={theme.color.primary} />}
-        </motion.div>
+        </AnimatedElement.div>
     );
 };
 
 // 4. Accordion Utility (Redesigned: "The Terminal")
 const AccordionCard = ({ data, theme, isActive, isLoading, onClick }) => {
     return (
-        <motion.div
+        <AnimatedElement.div
             onClick={onClick}
             animate={{ 
                 height: isActive ? 'auto' : '44px',
@@ -635,7 +635,7 @@ const AccordionCard = ({ data, theme, isActive, isLoading, onClick }) => {
                 </div>
             </div>
             {isLoading && <LoadingBar color={theme.color.primary} />}
-        </motion.div>
+        </AnimatedElement.div>
     );
 };
 
@@ -644,7 +644,7 @@ const BlurCard = ({ data, theme, isActive, isLoading, onClick }) => {
     const bg = data.hex_palette?.[0] || '#333';
     
     return (
-        <motion.div
+        <AnimatedElement.div
             onClick={onClick}
             initial="idle"
             whileHover="active"
@@ -657,7 +657,7 @@ const BlurCard = ({ data, theme, isActive, isLoading, onClick }) => {
             }}
         >
             {/* Background: Full Bleed Color */}
-            <motion.div
+            <AnimatedElement.div
                 variants={{
                     idle: { filter: 'blur(12px)', scale: 1.1, opacity: 0.8 },
                     active: { filter: 'blur(0px)', scale: 1, opacity: 1 }
@@ -677,7 +677,7 @@ const BlurCard = ({ data, theme, isActive, isLoading, onClick }) => {
                     {data.title}
                 </h3>
                 
-                <motion.div
+                <AnimatedElement.div
                     variants={{
                         idle: { height: 0, opacity: 0 },
                         active: { height: 'auto', opacity: 1, marginTop: 8 }
@@ -687,17 +687,17 @@ const BlurCard = ({ data, theme, isActive, isLoading, onClick }) => {
                      <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.4' }}>
                         {data.description}
                      </p>
-                </motion.div>
+                </AnimatedElement.div>
             </div>
             
             {isLoading && <LoadingBar color="white" />}
-        </motion.div>
+        </AnimatedElement.div>
     );
 };
 
 // Refined Loading Bar with Fade Off
 const LoadingBar = ({ color }) => (
-    <motion.div
+    <AnimatedElement.div
         initial={{ scaleX: 0, opacity: 1 }}
         animate={{ scaleX: 1, opacity: [1, 1, 0] }} // Fade out at very end
         transition={{ 

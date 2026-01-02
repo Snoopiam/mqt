@@ -6,7 +6,7 @@ import SplitView from './components/SplitView';
 import Controls from './components/Controls';
 import Hero from './components/Hero';
 
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft as GoBackArrow, Download } from 'lucide-react';
 import styleData from './data/style_prompts.json';
 // ... (imports)
 
@@ -396,7 +396,7 @@ function App() {
                 e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
               }}
             >
-              <ArrowLeft size={20} />
+              <GoBackArrow size={20} />
             </button>
 
             {/* Download Button */}

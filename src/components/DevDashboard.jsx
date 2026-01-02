@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion as AnimatedElement } from 'framer-motion';
 import { Settings, Upload, Save, X, Terminal, User, Play, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const PERSONA_OPTIONS = [
@@ -141,7 +141,7 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
             background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
             display: 'flex', justifyContent: 'center', alignItems: 'center'
         }}>
-            <motion.div 
+            <AnimatedElement.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 style={{
@@ -352,7 +352,7 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
                         )}
                     </div>
                 </div>
-            </motion.div>
+            </AnimatedElement.div>
         </div>
     );
 };

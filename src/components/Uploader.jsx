@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UploadCloud } from 'lucide-react';
+import { UploadCloud as UploadFloorPlanIcon } from 'lucide-react';
 
 const Uploader = ({ onUpload }) => {
     const [isDragOver, setIsDragOver] = useState(false);
@@ -91,7 +91,7 @@ const Uploader = ({ onUpload }) => {
                 transition: 'all 0.3s ease',
                 boxShadow: isDragOver ? '0 10px 20px rgba(255, 77, 0, 0.4)' : 'none'
             }}>
-                <UploadCloud size={40} color={isDragOver ? 'white' : 'var(--brand-orange)'} />
+                <UploadFloorPlanIcon size={40} color={isDragOver ? 'white' : 'var(--brand-orange)'} />
             </div>
 
             <h3 style={{

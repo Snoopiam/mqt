@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useSpring, useTransform, useDragControls } from 'framer-motion';
-import { Minus, Plus, Maximize, Move, RotateCcw } from 'lucide-react';
+import { motion as AnimatedElement, useSpring, useTransform, useDragControls } from 'framer-motion';
+import { Minus as ZoomOutButton, Plus as ZoomInButton, Move as DragSliderHandle, RotateCcw as ResetViewButton } from 'lucide-react';
 
 const SplitView = ({ beforeImage, afterImage }) => {
     const containerRef = useRef(null);
@@ -119,7 +119,7 @@ const SplitView = ({ beforeImage, afterImage }) => {
             </div>
 
             {/* Layer 2: Generated Image (Clipped by Slider) */}
-            <motion.div style={{
+            <AnimatedElement.div style={{
                 position: 'absolute', inset: 0,
                 overflow: 'hidden',
                 pointerEvents: 'none',
@@ -142,10 +142,10 @@ const SplitView = ({ beforeImage, afterImage }) => {
                         }}
                     />
                 </div>
-            </motion.div>
+            </AnimatedElement.div>
 
             {/* Drag Handle (Visuals) */}
-            <motion.div
+            <AnimatedElement.div
                 style={{
                     position: 'absolute',
                     top: 0, bottom: 0,
@@ -169,9 +169,9 @@ const SplitView = ({ beforeImage, afterImage }) => {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
                     border: '3px solid var(--brand-orange)'
                 }}>
-                    <Move size={18} color="#FF4D00" />
+                    <DragSliderHandle size={18} color="#FF4D00" />
                 </div>
-            </motion.div>
+            </AnimatedElement.div>
 
             {/* HUD Controls */}
             <div style={{
@@ -189,18 +189,18 @@ const SplitView = ({ beforeImage, afterImage }) => {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
                     backdropFilter: 'blur(4px)'
                 }}>
-                    <button onClick={() => setScale(s => Math.max(0.1, Math.round((s - 0.1) * 10) / 10))} style={btnStyle}><Minus size={16} /></button>
+                    <button onClick={() => setScale(s => Math.max(0.1, Math.round((s - 0.1) * 10) / 10))} style={zoomControlButtonStyle}><ZoomOutButton size={16} /></button>
                     <span style={{ fontSize: '0.85rem', fontWeight: 600, minWidth: '40px', textAlign: 'center', color: 'white' }}>{Math.round(scale * 100)}%</span>
-                    <button onClick={() => setScale(s => Math.min(5, Math.round((s + 0.1) * 10) / 10))} style={btnStyle}><Plus size={16} /></button>
+                    <button onClick={() => setScale(s => Math.min(5, Math.round((s + 0.1) * 10) / 10))} style={zoomControlButtonStyle}><ZoomInButton size={16} /></button>
                     <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.3)' }} />
-                    <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} style={btnStyle} title="Fit to Screen"><RotateCcw size={16} /></button>
+                    <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} style={zoomControlButtonStyle} title="Fit to Screen"><ResetViewButton size={16} /></button>
                 </div>
             </div>
         </div>
     );
 };
 
-const btnStyle = {
+const zoomControlButtonStyle = {
     background: 'transparent',
     border: 'none',
     color: 'white',

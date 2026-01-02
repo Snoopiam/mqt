@@ -1,3 +1,4 @@
+
 # MQT: The AI Maquettiste
 
 **MQT** (short for _Maquettiste_) is an advanced web application designed to bridge the gap between technical floor plans and artistic architectural presentations. It allows users to upload 2D CAD drawings and instantly visualize them in various artistic styles using a "Visual Forensics" approach to style transfer, powered by Google Gemini AI.

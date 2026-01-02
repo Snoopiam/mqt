@@ -772,7 +772,7 @@ DO NOT simply regenerate the same image. ACTIVELY ADJUST your rendering strategy
 
   return {
     status: 'success',
-    image: imgStr,
+    image: `data:${mimeType};base64,${imgStr}`,
     metadata: responseMetadata
   };
 }

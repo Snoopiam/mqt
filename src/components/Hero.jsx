@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight as BeginCreatingArrow, Sparkles } from 'lucide-react';
 
 const Hero = ({ onStart, onOpenPlayground, onOpenDesignSystem }) => {
     return (
@@ -107,7 +107,7 @@ const Hero = ({ onStart, onOpenPlayground, onOpenDesignSystem }) => {
                     }}
                 >
                     Start Creating
-                    <ArrowRight size={20} />
+                    <BeginCreatingArrow size={20} />
                 </button>
 
                 <div style={{ marginTop: '20px', display: 'flex', gap: '16px' }}>

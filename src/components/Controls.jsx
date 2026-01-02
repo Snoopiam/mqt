@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Tag, Layers, Settings, Fingerprint, Barcode } from 'lucide-react';
+import { motion as AnimatedElement, AnimatePresence } from 'framer-motion';
+import { Zap as GenerateRenderIcon, Layers as StylePickerIcon, Settings as DeveloperToolsIcon, Fingerprint, Barcode as GenericStylesIcon } from 'lucide-react';
 import styleData from '../data/style_prompts.json';
 
 const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating, currentStyles, onToggleDev, onPromptChange, currentTier, onTierChange }) => {
@@ -51,7 +51,7 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating, currentSt
             <div style={{ padding: '24px 24px 16px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                     <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Layers size={18} color="var(--brand-orange)" />
+                        <StylePickerIcon size={18} color="var(--brand-orange)" />
                         Visual Styles
                     </h2>
                     <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
@@ -64,7 +64,7 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating, currentSt
                         title="Developer Console"
                         style={{ background: 'transparent', border: 'none', color: '#666', cursor: 'pointer', padding: '4px' }}
                     >
-                        <Settings size={16} />
+                        <DeveloperToolsIcon size={16} />
                     </button>
                     {/* Tier Selector */}
                     <div style={{ 
@@ -128,7 +128,7 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating, currentSt
                     <AccordionSection 
                         title="Standard Collection"
                         subtitle={<span>{presets.filter(s => s.category !== 'Signature').length} <i>Generics</i></span>}
-                        icon={Barcode}
+                        icon={GenericStylesIcon}
                         color="#00aaff"
                         isOpen={selectedCategory === 'Standard'}
                         onClick={() => setSelectedCategory(selectedCategory === 'Standard' ? null : 'Standard')}
@@ -142,7 +142,7 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating, currentSt
                                     isLoading={isGenerating && currentPreset === style.id}
                                     onClick={() => handleCardClick(style.id)}
                                     isSignature={false}
-                                    icon={Barcode}
+                                    icon={GenericStylesIcon}
                                     customColor="#00aaff"
                                 />
                             ))}
@@ -177,7 +177,7 @@ const Controls = ({ currentPreset, onSelect, onGenerate, isGenerating, currentSt
                         </>
                     ) : (
                         <>
-                            <Zap size={18} fill="currentColor" />
+                            <GenerateRenderIcon size={18} fill="currentColor" />
                             Generate Render
                         </>
                     )}
@@ -201,7 +201,7 @@ const AccordionSection = ({ title, subtitle, icon, color, isOpen, onClick, child
         />
         <AnimatePresence>
             {isOpen && (
-                <motion.div
+                <AnimatedElement.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -209,14 +209,14 @@ const AccordionSection = ({ title, subtitle, icon, color, isOpen, onClick, child
                     style={{ overflow: 'hidden', margin: '0 -4px', padding: '0 4px' }}
                 >
                     {children}
-                </motion.div>
+                </AnimatedElement.div>
             )}
         </AnimatePresence>
     </div>
 );
 
 const NeonHeroCard = ({ title, subtitle, icon: Icon, onClick, color, isCompact }) => (
-    <motion.div
+    <AnimatedElement.div
         onClick={onClick}
         whileHover={{ scale: 1.02, borderColor: color }}
         animate={{ 
@@ -243,7 +243,7 @@ const NeonHeroCard = ({ title, subtitle, icon: Icon, onClick, color, isCompact }
         <h3 style={{ margin: 0, fontSize: isCompact ? '1rem' : '1.1rem', fontWeight: 700, color: 'white', transition: 'all 0.3s' }}>{title}</h3>
         {!isCompact && <div style={{ fontSize: '0.8rem', color: '#888', marginTop: '4px' }}>{subtitle}</div>}
         <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: `radial-gradient(circle, ${color}10, transparent 70%)`, pointerEvents: 'none' }} />
-    </motion.div>
+    </AnimatedElement.div>
 );
 
 const StyleCard = ({ data, isActive, isLoading, onClick, isSignature, icon: Icon, customColor }) => {
@@ -251,7 +251,7 @@ const StyleCard = ({ data, isActive, isLoading, onClick, isSignature, icon: Icon
     const activeColor = customColor || '#666';
 
     return (
-        <motion.div
+        <AnimatedElement.div
             onClick={onClick}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
@@ -290,7 +290,7 @@ const StyleCard = ({ data, isActive, isLoading, onClick, isSignature, icon: Icon
 
                 <AnimatePresence>
                     {(isHovered || isActive) && (
-                        <motion.div
+                        <AnimatedElement.div
                             initial={{ height: 0, opacity: 0, marginTop: 0 }}
                             animate={{ height: 'auto', opacity: 1, marginTop: 8 }}
                             exit={{ height: 0, opacity: 0, marginTop: 0 }}
@@ -298,26 +298,26 @@ const StyleCard = ({ data, isActive, isLoading, onClick, isSignature, icon: Icon
                             style={{ fontSize: '0.75rem', color: '#aaa', lineHeight: '1.4', overflow: 'hidden' }}
                         >
                             {data.description}
-                        </motion.div>
+                        </AnimatedElement.div>
                     )}
                 </AnimatePresence>
             </div>
             
             {/* Active Border Gradient */}
             {isActive && (
-                 <motion.div 
+                 <AnimatedElement.div 
                     layoutId="activeBorder"
                     style={{ position: 'absolute', inset: 0, border: `1px solid ${activeColor}`, borderRadius: '16px', opacity: 0.5, pointerEvents: 'none' }}
                  />
             )}
 
             {isLoading && <LoadingBar color={activeColor} />}
-        </motion.div>
+        </AnimatedElement.div>
     );
 };
 
 const LoadingBar = ({ color }) => (
-    <motion.div
+    <AnimatedElement.div
         initial={{ scaleX: 0, opacity: 1 }}
         animate={{ scaleX: 1, opacity: [1, 1, 0] }}
         transition={{ scaleX: { duration: 1.5, ease: "easeInOut" }, opacity: { duration: 0.3, delay: 1.2 } }}

@@ -899,5 +899,207 @@
       "material_1": "#FF1493",
       "material_2": "#1A1F26"
     }
+  },
+  "neon_noir_3d_extruded_schematic": {
+    "title": "Neon Noir 3D Extruded Schematic",
+    "description": "A high-contrast, stylized architectural presentation aesthetics featuring orthographic 3D wall extrusions. The visual language utilizes a strict duotone palette: a deep, matte midnight-blue background contrasted against vibrant, luminous magenta structural elements. The style simulates a physical architectural model with 'dark mode' logic, characterized by soft drop shadows, clean wireframe furniture detailing, and a 'flat-lay' photographic quality.",
+    "category": "User Created",
+    "generated_prompt": "top-down architectural floor plan, 3D extruded wall geometry, dark mode aesthetic, deep matte navy blue background, vibrant neon magenta walls and linework, soft distinct drop shadows, ambient occlusion, minimalist vector style, high contrast, orthographic projection, hyper-clean lines, Octane render, schematic visualization",
+    "active_persona": "SYSTEM INSTRUCTION: You are a 3D Visualization Engine running Octane Render. CAMERA: Set to Orthographic (FOV 0). GEOMETRY: Extrude all structural walls to a uniform height of 2.5m (scaled). SURFACE: Apply a roughness map of 0.9 to the background (matte paper absorption). Apply a roughness of 0.2 to wall tops (satin acrylic). LIGHTING: Disable environmental HDRI. Use one Area Light source for soft shadows. COLOR PHYSICS: Restrict all albedo channels to the specified dark-navy/neon-pink palette. Do not render textures like wood or tile; render only form and schematic hierarchy.",
+    "lighting_style": "Single soft directional light source from Top-Left (approx 10:00 position), generating consistent drop shadows to the bottom-right. No global illumination bounce; shadows are dark and crisp. Walls appear self-illuminated or highly reflective of pink spectrum light.",
+    "style_modifiers": [
+      "Orthographic camera projection",
+      "Volumetric extruded walls",
+      "Matte finish background",
+      "Luminous neon magenta accents",
+      "Soft directional drop shadows",
+      "Wireframe interior furniture",
+      "Duotone color grading",
+      "Clean vector aesthetic",
+      "High contrast schematic",
+      "Uniform wall thickness"
+    ],
+    "materials_list": [
+      "Matte Midnight Blue Cardstock (Background)",
+      "Fluorescent Pink Powder-Coated Aluminum (Walls)",
+      "Luminous Pink Vector Lines (Furniture)",
+      "Satin Finish Paint"
+    ],
+    "hex_palette": [
+      "#13161F",
+      "#E83A7D",
+      "#FF6EB4",
+      "#1C212E",
+      "#D12668"
+    ],
+    "color_palette_full": {
+      "primary": "#13161F",
+      "secondary": "#E83A7D",
+      "accent": "#FF6EB4",
+      "material_1": "#1C212E",
+      "material_2": "#D12668"
+    }
+  },
+  "neon_noir_3d_extruded_schematic_1765707619006": {
+    "title": "Neon Noir 3D Extruded Schematic",
+    "description": "A high-contrast, stylized architectural presentation aesthetics featuring orthographic 3D wall extrusions. The visual language utilizes a strict duotone palette: a deep, matte midnight-blue background contrasted against vibrant, luminous magenta structural elements. The style simulates a physical architectural model with 'dark mode' logic, characterized by soft drop shadows, clean wireframe furniture detailing, and a 'flat-lay' photographic quality.",
+    "category": "User Created",
+    "generated_prompt": "top-down architectural floor plan, 3D extruded wall geometry, dark mode aesthetic, deep matte navy blue background, vibrant neon magenta walls and linework, soft distinct drop shadows, ambient occlusion, minimalist vector style, high contrast, orthographic projection, hyper-clean lines, Octane render, schematic visualization",
+    "active_persona": "SYSTEM INSTRUCTION: You are a 3D Visualization Engine running Octane Render. CAMERA: Set to Orthographic (FOV 0). GEOMETRY: Extrude all structural walls to a uniform height of 2.5m (scaled). SURFACE: Apply a roughness map of 0.9 to the background (matte paper absorption). Apply a roughness of 0.2 to wall tops (satin acrylic). LIGHTING: Disable environmental HDRI. Use one Area Light source for soft shadows. COLOR PHYSICS: Restrict all albedo channels to the specified dark-navy/neon-pink palette. Do not render textures like wood or tile; render only form and schematic hierarchy.",
+    "lighting_style": "Single soft directional light source from Top-Left (approx 10:00 position), generating consistent drop shadows to the bottom-right. No global illumination bounce; shadows are dark and crisp. Walls appear self-illuminated or highly reflective of pink spectrum light.",
+    "style_modifiers": [
+      "Orthographic camera projection",
+      "Volumetric extruded walls",
+      "Matte finish background",
+      "Luminous neon magenta accents",
+      "Soft directional drop shadows",
+      "Wireframe interior furniture",
+      "Duotone color grading",
+      "Clean vector aesthetic",
+      "High contrast schematic",
+      "Uniform wall thickness"
+    ],
+    "materials_list": [
+      "Matte Midnight Blue Cardstock (Background)",
+      "Fluorescent Pink Powder-Coated Aluminum (Walls)",
+      "Luminous Pink Vector Lines (Furniture)",
+      "Satin Finish Paint"
+    ],
+    "hex_palette": [
+      "#13161F",
+      "#E83A7D",
+      "#FF6EB4",
+      "#1C212E",
+      "#D12668"
+    ],
+    "color_palette_full": {
+      "primary": "#13161F",
+      "secondary": "#E83A7D",
+      "accent": "#FF6EB4",
+      "material_1": "#1C212E",
+      "material_2": "#D12668"
+    }
+  },
+  "neon_noir_3d_extruded_schematic_1765707682444": {
+    "title": "Neon Noir 3D Extruded Schematic",
+    "description": "A high-contrast, stylized architectural presentation aesthetics featuring orthographic 3D wall extrusions. The visual language utilizes a strict duotone palette: a deep, matte midnight-blue background contrasted against vibrant, luminous magenta structural elements. The style simulates a physical architectural model with 'dark mode' logic, characterized by soft drop shadows, clean wireframe furniture detailing, and a 'flat-lay' photographic quality.",
+    "category": "User Created",
+    "generated_prompt": "top-down architectural floor plan, 3D extruded wall geometry, dark mode aesthetic, deep matte navy blue background, vibrant neon magenta walls and linework, soft distinct drop shadows, ambient occlusion, minimalist vector style, high contrast, orthographic projection, hyper-clean lines, Octane render, schematic visualization",
+    "active_persona": "SYSTEM INSTRUCTION: You are a 3D Visualization Engine running Octane Render. CAMERA: Set to Orthographic (FOV 0). GEOMETRY: Extrude all structural walls to a uniform height of 2.5m (scaled). SURFACE: Apply a roughness map of 0.9 to the background (matte paper absorption). Apply a roughness of 0.2 to wall tops (satin acrylic). LIGHTING: Disable environmental HDRI. Use one Area Light source for soft shadows. COLOR PHYSICS: Restrict all albedo channels to the specified dark-navy/neon-pink palette. Do not render textures like wood or tile; render only form and schematic hierarchy.",
+    "lighting_style": "Single soft directional light source from Top-Left (approx 10:00 position), generating consistent drop shadows to the bottom-right. No global illumination bounce; shadows are dark and crisp. Walls appear self-illuminated or highly reflective of pink spectrum light.",
+    "style_modifiers": [
+      "Orthographic camera projection",
+      "Volumetric extruded walls",
+      "Matte finish background",
+      "Luminous neon magenta accents",
+      "Soft directional drop shadows",
+      "Wireframe interior furniture",
+      "Duotone color grading",
+      "Clean vector aesthetic",
+      "High contrast schematic",
+      "Uniform wall thickness"
+    ],
+    "materials_list": [
+      "Matte Midnight Blue Cardstock (Background)",
+      "Fluorescent Pink Powder-Coated Aluminum (Walls)",
+      "Luminous Pink Vector Lines (Furniture)",
+      "Satin Finish Paint"
+    ],
+    "hex_palette": [
+      "#13161F",
+      "#E83A7D",
+      "#FF6EB4",
+      "#1C212E",
+      "#D12668"
+    ],
+    "color_palette_full": {
+      "primary": "#13161F",
+      "secondary": "#E83A7D",
+      "accent": "#FF6EB4",
+      "material_1": "#1C212E",
+      "material_2": "#D12668"
+    }
+  },
+  "monochromatic_crimson_orthographic_extrusion": {
+    "title": "Monochromatic Crimson Orthographic Extrusion",
+    "description": "A hybrid architectural visualization style merging physical model aesthetics with technical blueprinting. The style is defined by a unified deep red matte substrate, high-contrast extruded white structural elements, and precise 2D white wireframe overlays for furnishings.",
+    "category": "User Created",
+    "generated_prompt": "Orthographic top-down 3D architectural floor plan, monochromatic deep red color scheme. Base material is matte crimson cardstock. Walls are extruded pure white matte blocks with sharp edges. Furniture and fixtures are depicted as fine, technical white vector wireframe lines projected flat onto the red floor. Soft ambient occlusion, diffused top-left lighting, minimal shadows, clean vector aesthetic, 8k resolution, architectural visualization.",
+    "active_persona": "SYSTEM INSTRUCTION: Initialize Architectural Render Engine. 1. CAMERA: Set to Orthographic/Parallel Projection (FOV 0). 2. GEOMETRY: Extrude all structural walls to uniform height. Flatten all furniture assets into 2D schematic vector lines; do NOT render furniture as 3D meshes. 3. MATERIALS: Apply a global 'Matte Finish' (Roughness: 0.9-1.0). Eliminate all specular highlights. 4. COLOR: Enforce a strict duo-tone restriction: Background/Floor must be Hex #8B1E1E (Deep Red), Walls and Lines must be Hex #FFFFFF (Pure White). 5. LIGHTING: Use global illumination with high ambient occlusion samples to define the contact points between the white walls and red floor.",
+    "lighting_style": "Soft, diffused area light source positioned top-left (approx 10:00 position). Light temperature 5500K (Neutral White) to maintain white wall purity against red base. Shadows are soft-edged and short-throw.",
+    "style_modifiers": [
+      "Orthographic Projection",
+      "Monochromatic Color Blocking",
+      "Matte Surface Finish",
+      "High Contrast Extrusion",
+      "Vector Line Art Overlay",
+      "Schematic Wireframe Furniture",
+      "Soft Area Lighting",
+      "Ambient Occlusion",
+      "Paper-craft Aesthetic",
+      "Minimalist Geometry",
+      "Sharp Edge Fidelity"
+    ],
+    "materials_list": [
+      "Matte Deep Red Cardstock (Floor/Base)",
+      "Extruded White Matte Polymer (Walls)",
+      "White Vector Ink (Furniture Overlay)",
+      "Diffused Clay (General Finish)"
+    ],
+    "hex_palette": [
+      "#8B1E1E",
+      "#FFFFFF",
+      "#E6E6E6",
+      "#A32A2A",
+      "#F0F0F0"
+    ],
+    "color_palette_full": {
+      "primary": "#8B1E1E",
+      "secondary": "#FFFFFF",
+      "accent": "#E6E6E6",
+      "material_1": "#A32A2A",
+      "material_2": "#F0F0F0"
+    }
+  },
+  "monochromatic_crimson_orthographic_extrusion_1765970820745": {
+    "title": "Monochromatic Crimson Orthographic Extrusion",
+    "description": "A hybrid architectural visualization style merging physical model aesthetics with technical blueprinting. The style is defined by a unified deep red matte substrate, high-contrast extruded white structural elements, and precise 2D white wireframe overlays for furnishings.",
+    "category": "User Created",
+    "generated_prompt": "Orthographic top-down 3D architectural floor plan, monochromatic deep red color scheme. Base material is matte crimson cardstock. Walls are extruded pure white matte blocks with sharp edges. Furniture and fixtures are depicted as fine, technical white vector wireframe lines projected flat onto the red floor. Soft ambient occlusion, diffused top-left lighting, minimal shadows, clean vector aesthetic, 8k resolution, architectural visualization.",
+    "active_persona": "SYSTEM INSTRUCTION: Initialize Architectural Render Engine. 1. CAMERA: Set to Orthographic/Parallel Projection (FOV 0). 2. GEOMETRY: Extrude all structural walls to uniform height. Flatten all furniture assets into 2D schematic vector lines; do NOT render furniture as 3D meshes. 3. MATERIALS: Apply a global 'Matte Finish' (Roughness: 0.9-1.0). Eliminate all specular highlights. 4. COLOR: Enforce a strict duo-tone restriction: Background/Floor must be Hex #8B1E1E (Deep Red), Walls and Lines must be Hex #FFFFFF (Pure White). 5. LIGHTING: Use global illumination with high ambient occlusion samples to define the contact points between the white walls and red floor.",
+    "lighting_style": "Soft, diffused area light source positioned top-left (approx 10:00 position). Light temperature 5500K (Neutral White) to maintain white wall purity against red base. Shadows are soft-edged and short-throw.",
+    "style_modifiers": [
+      "Orthographic Projection",
+      "Monochromatic Color Blocking",
+      "Matte Surface Finish",
+      "High Contrast Extrusion",
+      "Vector Line Art Overlay",
+      "Schematic Wireframe Furniture",
+      "Soft Area Lighting",
+      "Ambient Occlusion",
+      "Paper-craft Aesthetic",
+      "Minimalist Geometry",
+      "Sharp Edge Fidelity"
+    ],
+    "materials_list": [
+      "Matte Deep Red Cardstock (Floor/Base)",
+      "Extruded White Matte Polymer (Walls)",
+      "White Vector Ink (Furniture Overlay)",
+      "Diffused Clay (General Finish)"
+    ],
+    "hex_palette": [
+      "#8B1E1E",
+      "#FFFFFF",
+      "#E6E6E6",
+      "#A32A2A",
+      "#F0F0F0"
+    ],
+    "color_palette_full": {
+      "primary": "#8B1E1E",
+      "secondary": "#FFFFFF",
+      "accent": "#E6E6E6",
+      "material_1": "#A32A2A",
+      "material_2": "#F0F0F0"
+    }
   }
 }
