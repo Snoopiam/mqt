@@ -12,7 +12,7 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
     const [persona, setPersona] = useState('style_engineer');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [extractedStyle, setExtractedStyle] = useState(null);
-    
+
     // Comparison State
     const [isGeneratingTest, setIsGeneratingTest] = useState(false);
     const [isComparing, setIsComparing] = useState(false);
@@ -26,24 +26,35 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
 
     const [logs, setLogs] = useState([]);
 
+    // ESC key to go back
+    React.useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                onBack();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onBack]);
+
     const addLog = (msg) => {
         setLogs(prev => [...prev, `> ${msg}`]);
     };
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => setImage(e.target.result);
+            reader.onload = (readerEvent) => setImage(readerEvent.target.result);
             reader.readAsDataURL(file);
         }
     };
 
-    const handleTestFloorPlanUpload = (e) => {
-        const file = e.target.files[0];
+    const handleTestFloorPlanUpload = (event) => {
+        const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => setTestFloorPlan(e.target.result);
+            reader.onload = (readerEvent) => setTestFloorPlan(readerEvent.target.result);
             reader.readAsDataURL(file);
         }
     };
@@ -250,16 +261,16 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ style: extractedStyle })
             });
-            const d = await res.json();
-            if (d.status === 'success') {
-                addLog(`Style Saved! ID: ${d.id}`);
+            const saveResponse = await res.json();
+            if (saveResponse.status === 'success') {
+                addLog(`Style Saved! ID: ${saveResponse.id}`);
                 // Update the extracted style with the new ID so it's consistent
-                const savedStyle = { ...extractedStyle, id: d.id };
+                const savedStyle = { ...extractedStyle, id: saveResponse.id };
                 setExtractedStyle(savedStyle);
-                
+
                 if (onStyleCreated) onStyleCreated(savedStyle);
             } else {
-                addLog(`Save Failed: ${d.detail}`);
+                addLog(`Save Failed: ${saveResponse.detail}`);
             }
         } catch(e) { 
             addLog(`Error: ${e.message}`); 
@@ -280,15 +291,17 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                 padding: '0 32px', background: '#0a0a0a'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <button 
+                    <button
                         onClick={onBack}
-                        style={{ 
+                        aria-label="Go back to main application"
+                        style={{
                             background: 'none', border: 'none', color: '#666', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', gap: '8px',
-                            padding: '8px', borderRadius: '8px', transition: 'all 0.2s'
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            padding: '12px', minWidth: '44px', minHeight: '44px',
+                            borderRadius: '8px', transition: 'all 0.2s'
                         }}
-                        onMouseEnter={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.background = '#222'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = '#666'; e.currentTarget.style.background = 'none'; }}
+                        onMouseEnter={(event) => { event.currentTarget.style.color = 'white'; event.currentTarget.style.background = '#222'; }}
+                        onMouseLeave={(event) => { event.currentTarget.style.color = '#666'; event.currentTarget.style.background = 'none'; }}
                     >
                         <ArrowLeft size={18} />
                     </button>
@@ -338,14 +351,14 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                                 overflow: 'hidden', position: 'relative', background: '#0a0a0a',
                                 transition: 'all 0.2s', cursor: 'pointer'
                             }}
-                                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#555'}
-                                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#333'}
+                                onMouseEnter={(event) => event.currentTarget.style.borderColor = '#555'}
+                                onMouseLeave={(event) => event.currentTarget.style.borderColor = '#333'}
                             >
                                 {image ? (
                                     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                                         <img src={image} style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.8 }} />
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); setImage(null); }}
+                                        <button
+                                            onClick={(event) => { event.preventDefault(); setImage(null); }}
                                             style={{ 
                                                 position: 'absolute', top: '8px', right: '8px',
                                                 background: 'rgba(0,0,0,0.8)', border: 'none', color: 'white',
@@ -362,7 +375,7 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                                         <p style={{ margin: '4px 0 0', fontSize: '0.75rem', opacity: 0.5 }}>JPG, PNG support</p>
                                     </div>
                                 )}
-                                <input type="file" onChange={handleImageUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                <input type="file" onChange={handleImageUpload} aria-label="Upload style reference image" style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                             </div>
                         </div>
 
@@ -376,14 +389,14 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                                 overflow: 'hidden', position: 'relative', background: '#0a0a0a',
                                 transition: 'all 0.2s', cursor: 'pointer'
                             }}
-                                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#555'}
-                                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#333'}
+                                onMouseEnter={(event) => event.currentTarget.style.borderColor = '#555'}
+                                onMouseLeave={(event) => event.currentTarget.style.borderColor = '#333'}
                             >
                                 {testFloorPlan ? (
                                     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                                         <img src={testFloorPlan} style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.8 }} />
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); setTestFloorPlan(null); }}
+                                        <button
+                                            onClick={(event) => { event.preventDefault(); setTestFloorPlan(null); }}
                                             style={{ 
                                                 position: 'absolute', top: '8px', right: '8px',
                                                 background: 'rgba(0,0,0,0.8)', border: 'none', color: 'white',
@@ -400,7 +413,7 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                                         <p style={{ margin: '4px 0 0', fontSize: '0.75rem', opacity: 0.5 }}>Used for Validation Test</p>
                                     </div>
                                 )}
-                                <input type="file" onChange={handleTestFloorPlanUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                <input type="file" onChange={handleTestFloorPlanUpload} aria-label="Upload test floor plan image" style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                             </div>
                         </div>
 
@@ -447,7 +460,7 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                             <span>SYSTEM LOGS</span>
                          </div>
                         {logs.length === 0 && <span style={{ color: '#333' }}>// Ready for input...</span>}
-                        {logs.map((L, i) => <div key={i} style={{ marginBottom: '4px' }}>{L}</div>)}
+                        {logs.map((logEntry, index) => <div key={index} style={{ marginBottom: '4px' }}>{logEntry}</div>)}
                     </div>
                 </div>
 
@@ -691,8 +704,8 @@ const StyleDNALaboratory = ({ onBack, onStyleCreated }) => {
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                                             transition: 'all 0.2s'
                                         }}
-                                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)'}
-                                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)'}
+                                        onMouseEnter={event => event.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)'}
+                                        onMouseLeave={event => event.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)'}
                                     >
                                         <Microscope size={16} />
                                         Re-Extract (Strict Mode)

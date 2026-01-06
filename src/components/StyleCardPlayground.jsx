@@ -39,13 +39,24 @@ const StyleCardPlayground = ({ onBack }) => {
     const [globalFont, setGlobalFont] = useState('sans');
     const [customFontFamily, setCustomFontFamily] = useState('active-adobe-font-name');
     const [globalColor, setGlobalColor] = useState('orange');
-    
+
     // Navigation State
     const [selectedCategory, setSelectedCategory] = useState(null); // null = Home, 'Signature' | 'Standard'
-    
+
     // Interaction State
     const [activeCardId, setActiveCardId] = useState(null);
     const [loadingCardId, setLoadingCardId] = useState(null);
+
+    // ESC key to go back
+    React.useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                onBack();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onBack]);
 
     // Derived Data
     const stylesList = useMemo(() => Object.entries(styleData).map(([key, data]) => ({ id: key, ...data })), []);
@@ -97,12 +108,14 @@ const StyleCardPlayground = ({ onBack }) => {
             }}>
                 {/* Header */}
                 <div>
-                    <button 
-                        onClick={onBack} 
-                        style={{ 
-                            background: 'none', border: 'none', color: '#666', 
+                    <button
+                        onClick={onBack}
+                        aria-label="Go back to main application"
+                        style={{
+                            background: 'none', border: 'none', color: '#666',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px',
-                            marginBottom: '20px', padding: 0, fontFamily: 'inherit'
+                            marginBottom: '20px', padding: '8px', fontFamily: 'inherit',
+                            minHeight: '44px', borderRadius: '8px'
                         }}>
                         <ArrowLeft size={16} /> Back to App
                     </button>
@@ -141,7 +154,7 @@ const StyleCardPlayground = ({ onBack }) => {
                                 <input 
                                     type="text" 
                                     value={customFontFamily}
-                                    onChange={(e) => setCustomFontFamily(e.target.value)}
+                                    onChange={(event) => setCustomFontFamily(event.target.value)}
                                     placeholder="e.g. futura-pt"
                                     style={{ 
                                         background: '#111', border: '1px solid #333', color: 'white', 

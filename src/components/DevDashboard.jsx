@@ -13,7 +13,7 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
     const [persona, setPersona] = useState('creative_writer');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [extractedStyle, setExtractedStyle] = useState(null);
-    
+
     // Comparison State
     const [isGeneratingTest, setIsGeneratingTest] = useState(false);
     const [isComparing, setIsComparing] = useState(false);
@@ -22,16 +22,27 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
 
     const [logs, setLogs] = useState([]);
 
+    // ESC key to close modal
+    React.useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape' && isOpen) {
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
+
     const addLog = (msg) => {
         setLogs(prev => [...prev, `> ${msg}`]);
         // Auto-scroll logic if needed
     };
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => setImage(e.target.result);
+            reader.onload = (readerEvent) => setImage(readerEvent.target.result);
             reader.readAsDataURL(file);
         }
     };
@@ -157,7 +168,7 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
                         <Terminal size={24} color="#ff4d00" />
                         <h2 style={{ margin: 0, color: '#fff', fontSize: '1.2rem' }}>Style DNA Laboratory</h2>
                     </div>
-                    <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer', padding: '8px' }}><X size={24} /></button>
+                    <button onClick={onClose} aria-label="Close developer dashboard" style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer', padding: '12px', minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={24} /></button>
                 </div>
 
                 <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
@@ -169,19 +180,19 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
                         <div>
                             <label style={{ display: 'block', color: '#888', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600 }}>ACTIVE PERSONA</label>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                {PERSONA_OPTIONS.map(p => (
-                                    <div 
-                                        key={p.id}
-                                        onClick={() => setPersona(p.id)}
+                                {PERSONA_OPTIONS.map(personaOption => (
+                                    <div
+                                        key={personaOption.id}
+                                        onClick={() => setPersona(personaOption.id)}
                                         style={{
                                             padding: '12px', borderRadius: '8px', cursor: 'pointer',
-                                            border: persona === p.id ? '1px solid #ff4d00' : '1px solid #333',
-                                            background: persona === p.id ? 'rgba(255, 77, 0, 0.1)' : 'transparent',
+                                            border: persona === personaOption.id ? '1px solid #ff4d00' : '1px solid #333',
+                                            background: persona === personaOption.id ? 'rgba(255, 77, 0, 0.1)' : 'transparent',
                                             transition: 'all 0.2s'
                                         }}
                                     >
-                                        <div style={{ color: persona === p.id ? '#ff4d00' : '#ddd', fontWeight: 500 }}>{p.name}</div>
-                                        <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '4px' }}>{p.desc}</div>
+                                        <div style={{ color: persona === personaOption.id ? '#ff4d00' : '#ddd', fontWeight: 500 }}>{personaOption.name}</div>
+                                        <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '4px' }}>{personaOption.desc}</div>
                                     </div>
                                 ))}
                             </div>
@@ -204,7 +215,7 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
                                         <p style={{ margin: 0, fontSize: '0.9rem' }}>Drop Image Here</p>
                                     </div>
                                 )}
-                                <input type="file" onChange={handleImageUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                <input type="file" onChange={handleImageUpload} aria-label="Upload reference style image" style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
                             </div>
                         </div>
                         
@@ -225,7 +236,7 @@ const DevDashboard = ({ isOpen, onClose, onStyleCreated, history, onHistorySelec
                         {/* Logs Console */}
                         <div style={{ flex: 1, background: '#000', padding: '12px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.75rem', color: '#0f0', overflowY: 'auto', border: '1px solid #222' }}>
                             {logs.length === 0 && <span style={{ color: '#444' }}>// System Ready...</span>}
-                            {logs.map((L, i) => <div key={i} style={{ marginBottom: '4px' }}>{L}</div>)}
+                            {logs.map((logEntry, index) => <div key={index} style={{ marginBottom: '4px' }}>{logEntry}</div>)}
                         </div>
                     </div>
 

@@ -15,7 +15,7 @@ import DevDashboard from './components/DevDashboard';
 import StyleCardPlayground from './components/StyleCardPlayground';
 import StyleDNALaboratory from './components/StyleDNALaboratory';
 
-const fileToBase64 = (file) => {
+const convertFileToBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -25,10 +25,10 @@ const fileToBase64 = (file) => {
 };
 
 function App() {
-  const [showHero, setShowHero] = useState(true);
-  const [showStylePlayground, setShowStylePlayground] = useState(false);
-  const [showDesignSystem, setShowDesignSystem] = useState(false);
-  const [showDevTools, setShowDevTools] = useState(false);
+  const [isHeroScreenVisible, setIsHeroScreenVisible] = useState(true);
+  const [isStylePlaygroundVisible, setIsStylePlaygroundVisible] = useState(false);
+  const [isDesignSystemVisible, setIsDesignSystemVisible] = useState(false);
+  const [isDevToolsVisible, setIsDevToolsVisible] = useState(false);
 
   // Lift styles to state so we can add new ones dynamically
   const [availableStyles, setAvailableStyles] = useState(styleData);
@@ -36,17 +36,24 @@ function App() {
   const [originalImage, setOriginalImage] = useState(null);
   const [generatedImage, setGeneratedImage] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [currentPreset, setCurrentPreset] = useState(null);
-  const [currentTier, setCurrentTier] = useState("FREE"); // Default to FAST/FREE
+  const [selectedStylePreset, setSelectedStylePreset] = useState(null);
+  const [selectedPricingTier, setSelectedPricingTier] = useState("FREE"); // Default to FAST/FREE
   const [customPrompt, setCustomPrompt] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [history, setHistory] = useState([]); // History of generated images
+  const [generationHistory, setGenerationHistory] = useState([]); // History of generated images
+
+  // Style modifiers (line weight, saturation, sharpness) - per spec
+  const [styleModifiers, setStyleModifiers] = useState({
+    lineWeight: 50,      // 0-100: <40 = fine, >60 = bold
+    colorIntensity: 50,  // 0-100: <40 = muted, >60 = vibrant
+    sharpness: 50        // 0-100: <35 = soft/painterly, >65 = hyper-sharp
+  });
 
   // Hidden Toggle for Dev Mode (Shift + D)
   React.useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.shiftKey && e.key === 'D') {
-        setShowDevTools(prev => !prev);
+    const handleKeyDown = (event) => {
+      if (event.shiftKey && event.key === 'D') {
+        setIsDevToolsVisible(prev => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -60,7 +67,7 @@ function App() {
       [newStyle.id]: newStyle
     }));
     // Switch to it immediately
-    setCurrentPreset(newStyle.id);
+    setSelectedStylePreset(newStyle.id);
   };
 
   // Cleanup memory on unmount or change
@@ -71,11 +78,11 @@ function App() {
     };
   }, [originalImage, generatedImage]);
 
-  const handleStart = () => {
-    setShowHero(false);
+  const handleStartCreating = () => {
+    setIsHeroScreenVisible(false);
   };
 
-  const handleUpload = (file) => {
+  const handleImageUpload = (file) => {
     if (!file) return;
     // Release old URL if exists
     if (originalImage) URL.revokeObjectURL(originalImage);
@@ -86,9 +93,9 @@ function App() {
     setUploadedFile(file);
   };
 
-  const handleGenerate = async () => {
+  const handleGenerateRender = async () => {
     // START GENERATION: Require Image AND (Preset OR Custom Prompt)
-    if (!originalImage || (!currentPreset && !customPrompt)) {
+    if (!originalImage || (!selectedStylePreset && !customPrompt)) {
         alert("Please select a style preset OR describe a custom style.");
         return;
     }
@@ -99,7 +106,7 @@ function App() {
       let imageToSend = originalImage;
 
       if (uploadedFile) {
-        imageToSend = await fileToBase64(uploadedFile);
+        imageToSend = await convertFileToBase64(uploadedFile);
       }
 
       let forensicData;
@@ -116,11 +123,11 @@ function App() {
         };
       }
       // PRIORITY 2: PRESET
-      else if (currentPreset) {
+      else if (selectedStylePreset) {
          // Key is the ID, so we can access directly and inject the id
-         const presetData = availableStyles[currentPreset];
+         const presetData = availableStyles[selectedStylePreset];
          if (presetData) {
-           forensicData = { ...presetData, id: currentPreset };
+           forensicData = { ...presetData, id: selectedStylePreset };
          }
       }
 
@@ -128,12 +135,12 @@ function App() {
         throw new Error("Style data invalid");
       }
 
-      // Pass currentTier to the API
-      const result = await generateRender(imageToSend, forensicData, currentTier);
+      // Pass selectedPricingTier and styleModifiers to the API
+      const result = await generateRender(imageToSend, forensicData, selectedPricingTier, styleModifiers);
       setGeneratedImage(result);
 
       // Add to History
-      setHistory(prev => [result, ...prev].slice(0, 10)); // Keep last 10
+      setGenerationHistory(prev => [result, ...prev].slice(0, 10)); // Keep last 10
 
     } catch (error) {
       // console.error("Generation failed", error);
@@ -143,7 +150,7 @@ function App() {
     }
   };
 
-  const handleReset = () => {
+  const handleResetWorkspace = () => {
     if (originalImage) URL.revokeObjectURL(originalImage);
     if (generatedImage && generatedImage !== originalImage) URL.revokeObjectURL(generatedImage);
 
@@ -154,7 +161,7 @@ function App() {
 
 
   // Helper to convert base64 to blob synchronously
-  const base64ToBlob = (imageData, contentType = 'image/png') => {
+  const convertBase64ToBlob = (imageData, contentType = 'image/png') => {
     try {
         // Handle blob URLs - can't convert directly
         if (imageData.startsWith('blob:')) {
@@ -178,8 +185,8 @@ function App() {
         for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
             const slice = byteCharacters.slice(offset, offset + sliceSize);
             const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
+            for (let byteIndex = 0; byteIndex < slice.length; byteIndex++) {
+                byteNumbers[byteIndex] = slice.charCodeAt(byteIndex);
             }
             const byteArray = new Uint8Array(byteNumbers);
             byteArrays.push(byteArray);
@@ -190,7 +197,7 @@ function App() {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownloadRender = () => {
     if (!generatedImage) {
       alert("No image to download!");
       return;
@@ -210,8 +217,8 @@ function App() {
 
     // Get style name for filename
     let styleName = 'custom';
-    if (currentPreset && availableStyles[currentPreset]) {
-        styleName = availableStyles[currentPreset].title || currentPreset;
+    if (selectedStylePreset && availableStyles[selectedStylePreset]) {
+        styleName = availableStyles[selectedStylePreset].title || selectedStylePreset;
     } else if (customPrompt) {
         styleName = 'custom-prompt';
     }
@@ -263,7 +270,7 @@ function App() {
     } catch (error) {
         // Method 2: Blob fallback
         try {
-            const blob = base64ToBlob(generatedImage, mimeType);
+            const blob = convertBase64ToBlob(generatedImage, mimeType);
             if (blob) {
                 const url = window.URL.createObjectURL(blob);
                 const fallbackLink = document.createElement('a');
@@ -282,32 +289,32 @@ function App() {
     }
   };
 
-  if (showStylePlayground) {
-    return <StyleCardPlayground onBack={() => setShowStylePlayground(false)} />;
+  if (isStylePlaygroundVisible) {
+    return <StyleCardPlayground onBack={() => setIsStylePlaygroundVisible(false)} />;
   }
 
-  if (showDesignSystem) {
+  if (isDesignSystemVisible) {
     return (
-        <StyleDNALaboratory 
-            onBack={() => setShowDesignSystem(false)} 
-            onStyleCreated={handleStyleCreated} 
+        <StyleDNALaboratory
+            onBack={() => setIsDesignSystemVisible(false)}
+            onStyleCreated={handleStyleCreated}
         />
     );
   }
 
-  if (showHero) {
+  if (isHeroScreenVisible) {
     return (
       <>
         <Hero
-            onStart={handleStart}
-            onOpenPlayground={() => setShowStylePlayground(true)}
-            onOpenDesignSystem={() => setShowDesignSystem(true)}
+            onStartCreating={handleStartCreating}
+            onOpenStylePlayground={() => setIsStylePlaygroundVisible(true)}
+            onOpenStyleDNALab={() => setIsDesignSystemVisible(true)}
         />
         <DevDashboard
-          isOpen={showDevTools}
-          onClose={() => setShowDevTools(false)}
+          isOpen={isDevToolsVisible}
+          onClose={() => setIsDevToolsVisible(false)}
           onStyleCreated={handleStyleCreated}
-          history={history}
+          history={generationHistory}
         />
       </>
     );
@@ -316,10 +323,10 @@ function App() {
   return (
     <Layout>
       <DevDashboard
-          isOpen={showDevTools}
-          onClose={() => setShowDevTools(false)}
+          isOpen={isDevToolsVisible}
+          onClose={() => setIsDevToolsVisible(false)}
           onStyleCreated={handleStyleCreated}
-          history={history}
+          history={generationHistory}
           onHistorySelect={setGeneratedImage}
       />
       {!originalImage ? (
@@ -327,16 +334,16 @@ function App() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           height: '100%', width: '100%', padding: '2rem'
         }}>
-          <Uploader onUpload={handleUpload} />
+          <Uploader onUpload={handleImageUpload} />
 
           {/* Back to Hero Button (Optional, but good for navigation) */}
           <button
-            onClick={() => setShowHero(true)}
+            onClick={() => setIsHeroScreenVisible(true)}
             style={{
               position: 'absolute', top: '24px', left: '24px',
               background: 'transparent',
               border: 'none',
-              color: 'var(--text-secondary)',
+              color: 'var(--text-color-secondary)',
               cursor: 'pointer',
               fontSize: '0.85rem'
             }}
@@ -348,7 +355,7 @@ function App() {
         <div style={{ display: 'flex', height: '100%', width: '100%', overflow: 'hidden' }}>
 
           {/* Main Canvas */}
-          <div style={{ flex: 1, position: 'relative', backgroundColor: 'var(--bg-primary)' }}>
+          <div style={{ flex: 1, position: 'relative', backgroundColor: 'var(--background-color-primary)' }}>
             <SplitView
               beforeImage={originalImage}
               afterImage={generatedImage || originalImage}
@@ -356,11 +363,14 @@ function App() {
 
             {/* Back Button */}
             <button
-              onClick={handleReset}
+              onClick={handleResetWorkspace}
               title="Upload New Plan"
+              aria-label="Go back and upload new plan"
               style={{
                 position: 'absolute', top: '24px', left: '24px',
-                padding: '10px',
+                padding: '12px',
+                minWidth: '44px',
+                minHeight: '44px',
                 background: 'rgba(0,0,0,0.6)',
                 backdropFilter: 'blur(8px)',
                 color: 'white',
@@ -371,13 +381,13 @@ function App() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s ease'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 77, 0, 0.8)';
-                e.currentTarget.style.borderColor = 'transparent';
+              onMouseEnter={(event) => {
+                event.currentTarget.style.background = 'rgba(255, 77, 0, 0.8)';
+                event.currentTarget.style.borderColor = 'transparent';
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(0,0,0,0.6)';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+              onMouseLeave={(event) => {
+                event.currentTarget.style.background = 'rgba(0,0,0,0.6)';
+                event.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
               }}
             >
               <GoBackArrow size={20} />
@@ -385,28 +395,31 @@ function App() {
 
             {/* Download Button */}
             <button
-              onClick={handleDownload}
+              onClick={handleDownloadRender}
               title="Download Render"
+              aria-label="Download generated render"
               style={{
                 position: 'absolute', top: '24px', right: '24px',
-                padding: '10px',
+                padding: '12px',
+                minWidth: '44px',
+                minHeight: '44px',
                 background: 'rgba(0,0,0,0.6)',
                 backdropFilter: 'blur(8px)',
-                color: 'white', // Download is primary action, but white keeps it clean
+                color: 'white',
                 border: '1px solid rgba(255,255,255,0.15)',
                 borderRadius: '8px',
                 cursor: 'pointer',
-                zIndex: 100, // Boosted Z-Index to prevent overlay issues
+                zIndex: 100,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s ease'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--brand-orange)';
-                e.currentTarget.style.borderColor = 'transparent';
+              onMouseEnter={(event) => {
+                event.currentTarget.style.background = 'var(--brand-orange)';
+                event.currentTarget.style.borderColor = 'transparent';
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(0,0,0,0.6)';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+              onMouseLeave={(event) => {
+                event.currentTarget.style.background = 'rgba(0,0,0,0.6)';
+                event.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
               }}
             >
               <Download size={20} />
@@ -415,15 +428,18 @@ function App() {
 
             {/* Sidebar */}
             <Controls
-              currentPreset={currentPreset}
-              onSelect={setCurrentPreset}
-              onGenerate={handleGenerate}
+              currentPreset={selectedStylePreset}
+              onSelect={setSelectedStylePreset}
+              onGenerate={handleGenerateRender}
               isGenerating={isGenerating}
               // Pass the dynamic styles
               currentStyles={availableStyles}
-              onToggleDev={() => setShowDevTools(prev => !prev)}
-              currentTier={currentTier}
-              onTierChange={setCurrentTier}
+              onToggleDev={() => setIsDevToolsVisible(prev => !prev)}
+              currentTier={selectedPricingTier}
+              onTierChange={setSelectedPricingTier}
+              // Style modifiers (line weight, saturation, sharpness)
+              modifiers={styleModifiers}
+              onModifiersChange={setStyleModifiers}
             />
         </div>
       )}

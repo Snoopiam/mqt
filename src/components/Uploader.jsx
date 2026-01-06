@@ -5,20 +5,20 @@ const Uploader = ({ onUpload }) => {
     const [isDragOver, setIsDragOver] = useState(false);
     const fileInputRef = useRef(null);
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
+    const handleDragOver = (event) => {
+        event.preventDefault();
         setIsDragOver(true);
     };
 
-    const handleDragLeave = (e) => {
-        e.preventDefault();
+    const handleDragLeave = (event) => {
+        event.preventDefault();
         setIsDragOver(false);
     };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
+    const handleDrop = (event) => {
+        event.preventDefault();
         setIsDragOver(false);
-        const files = e.dataTransfer.files;
+        const files = event.dataTransfer.files;
         if (files && files[0]) {
             // Validate file type
             if (files[0].type.startsWith('image/')) {
@@ -33,8 +33,8 @@ const Uploader = ({ onUpload }) => {
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (e) => {
-        const files = e.target.files;
+    const handleFileChange = (event) => {
+        const files = event.target.files;
         if (files && files[0]) {
             onUpload(files[0]);
         }
@@ -46,9 +46,9 @@ const Uploader = ({ onUpload }) => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+            onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
                     handleClick();
                 }
             }}
@@ -63,15 +63,14 @@ const Uploader = ({ onUpload }) => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                border: `2px dashed ${isDragOver ? 'var(--brand-orange)' : 'var(--border-subtle)'}`,
+                border: `2px dashed ${isDragOver ? 'var(--brand-orange)' : 'var(--border-color-subtle)'}`,
                 borderRadius: '16px',
                 padding: '5rem 2rem',
-                backgroundColor: isDragOver ? 'rgba(255, 77, 0, 0.05)' : 'var(--bg-panel)',
+                backgroundColor: isDragOver ? 'rgba(255, 77, 0, 0.05)' : 'var(--background-color-panel)',
                 cursor: 'pointer',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: isDragOver ? 'scale(1.02)' : 'scale(1)',
-                boxShadow: isDragOver ? 'var(--shadow-lg)' : 'none',
-                outline: 'none', // We should add focus visible style in CSS or inline
+                boxShadow: isDragOver ? 'var(--shadow-large)' : 'none',
             }}
         >
             <input
@@ -80,6 +79,7 @@ const Uploader = ({ onUpload }) => {
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
                 accept="image/*"
+                aria-label="Upload floor plan image"
             />
 
             <div style={{
@@ -98,14 +98,14 @@ const Uploader = ({ onUpload }) => {
                 margin: '0 0 0.75rem 0',
                 fontSize: '1.5rem',
                 fontWeight: 600,
-                color: 'var(--text-primary)'
+                color: 'var(--text-color-primary)'
             }}>
                 Upload Floor Plan
             </h3>
 
             <p style={{
                 margin: 0,
-                color: 'var(--text-secondary)',
+                color: 'var(--text-color-secondary)',
                 fontSize: '1rem',
                 marginBottom: '1rem'
             }}>

@@ -6,22 +6,28 @@ const Layout = ({ children }) => {
             display: 'flex',
             flexDirection: 'column',
             height: '100vh',
-            backgroundColor: 'var(--bg-primary)'
+            backgroundColor: 'var(--background-color-primary)'
         }}>
+            {/* Skip Navigation Link for Accessibility */}
+            <a href="#main-content" className="skip-link">
+                Skip to main content
+            </a>
+
             <header style={{
                 padding: '0 2rem',
                 height: '80px',
-                borderBottom: '1px solid var(--border-subtle)',
+                borderBottom: '1px solid var(--border-color-subtle)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                backgroundColor: 'var(--bg-secondary)',
+                backgroundColor: 'var(--background-color-secondary)',
                 backdropFilter: 'blur(10px)',
                 zIndex: 10
             }}>
-                <div 
-                    onClick={() => window.location.href = '/'}
-                    style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}
+                <a
+                    href="/"
+                    aria-label="MQT Home"
+                    style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
                 >
                     {/* Logo Mark */}
                     <div style={{
@@ -45,7 +51,7 @@ const Layout = ({ children }) => {
                         }}>MQT</h1>
                         <span style={{
                             fontSize: '0.75rem',
-                            color: 'var(--text-secondary)',
+                            color: 'var(--text-color-secondary)',
                             textTransform: 'uppercase',
                             letterSpacing: '0.15em',
                             fontWeight: 500,
@@ -54,20 +60,23 @@ const Layout = ({ children }) => {
                             The AI Maquettiste
                         </span>
                     </div>
-                </div>
+                </a>
 
-                <div>
+                <nav aria-label="Main navigation">
                     {/* Placeholder for menu */}
-                </div>
+                </nav>
             </header>
 
-            <main style={{
-                flex: 1,
-                position: 'relative',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
+            <main
+                id="main-content"
+                style={{
+                    flex: 1,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}
+            >
                 {children}
             </main>
         </div>
